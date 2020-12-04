@@ -29,8 +29,7 @@ public class ObjectPokojRepository implements PokojRepository{
         for (Pokoj pokoj : pokoje.keySet()){
             Hotel hotel = pokoje.get(pokoj);
             if (hotel.getAdres().equals(adres)
-                    && pokoj.getPoczatekRezerwacji().equals(poczatek)
-                    && pokoj.getKoniecRezerwacji().equals(koniec)){
+                    && !(pokoj.getPoczatekRezerwacji().compareTo(poczatek) <= 0 && pokoj.getKoniecRezerwacji().compareTo(koniec) >= 0)){
                 if (!oferty.containsKey(hotel)) {
                     oferty.put(hotel, new ArrayList<>());
                 }
