@@ -37,7 +37,7 @@ public class HomeKontroler {
         return "home";
     }
 
-    @RequestMapping(method = GET)
+    @RequestMapping(method = POST)
     public String processHome(
             RedirectAttributes redirectAttributes,
             MiastoForm miastoForm){
@@ -45,7 +45,7 @@ public class HomeKontroler {
         redirectAttributes.addAttribute("miasto", miastoForm.getMiasto());
         redirectAttributes.addFlashAttribute("miastoForm",miastoForm);
 
-        return "/{miasto}";
+        return "redirect:/{miasto}";
     }
 
     @RequestMapping(value = "/{miasto}", method = GET)

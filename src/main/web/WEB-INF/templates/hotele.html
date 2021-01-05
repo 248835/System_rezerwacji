@@ -3,19 +3,47 @@
       xmlns:th="http://www.thymeleaf.org">
 <html lang="en">
 <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+    <title>Znalezione hotele</title>
+</head>
+<head>
     <meta charset="UTF-8">
     <title>Hotele</title>
 </head>
 <body>
 <div class="listTitle">
     <h1>Hotele w danym mieście</h1>
-    <ul class="spittleList">
-        <li th:each="hotel : ${hotelList}">
-            <div th:text="${hotel.nazwa}">Nazwa</div>
-            <div th:text="${hotel.ulica}">Ulica</div>
-            <div th:text="${hotel.ocena}">Ocena</div>
-        </li>
-    </ul>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Nazwa</th>
+            <th scope="col">Ulica</th>
+            <th scope="col">Ocena</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <li th:each="hotel : ${hotelList}">
+                <th scope="col">
+                    <div th:text="${hotel.nazwa}"/>
+                </th>
+                <th scope="col">
+                    <div th:text="${hotel.ulica}"/>
+                </th>
+                <th scope="col">
+                    <div th:text="${hotel.ocena}"/>
+                </th>
+            </li>
+        </tr>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>

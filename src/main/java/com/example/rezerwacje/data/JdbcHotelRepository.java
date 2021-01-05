@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 public class JdbcHotelRepository implements HotelRepository {
-    private static final String ZNAJDZ_MIASTO = "select nazwa, miasto, ulica, ocena from hotele where nazwa = ?";
+    private static final String ZNAJDZ_MIASTO = "select nazwa, miasto, ulica, ocena from hotele where miasto = ?";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -28,7 +28,7 @@ public class JdbcHotelRepository implements HotelRepository {
 
     @Override
     public List<Hotel> znajdzHotele(String miasto) {
-        return jdbcTemplate.query(ZNAJDZ_MIASTO,this::mapRow,miasto);
+        return jdbcTemplate.query(ZNAJDZ_MIASTO, this::mapRow,miasto);
     }
 
     @Override

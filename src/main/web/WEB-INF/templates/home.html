@@ -8,16 +8,16 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 
-    <title>Hello, world!</title>
+    <title>System Rezerwacji</title>
 </head>
 <body>
 <h1 class="text-center">Witaj w aplikacji do rezerwacji!</h1>
-<form method="get" th:object="${miastoForm}" th:action="@{/}">
+<form method="POST" th:object="${miastoForm}" th:action="@{/}">
     <h4 class="text-center">Wyszukaj hotele</h4>
     <div class="form-control mb-3">
 
         <label for="formGroupExampleInput" class="form-label">Miasto</label>
-        <input style="max-width: 30em; margin:auto" type="text" class="form-control" id="formGroupExampleInput">
+        <input style="max-width: 30em; margin:auto" type="text" th:field="*{miasto}" class="form-control" id="formGroupExampleInput">
     </div>
     <input type="submit" class="btn btn-primary" value="Wyślij" />
 
