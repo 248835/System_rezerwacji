@@ -11,6 +11,8 @@ import java.util.Map;
 public interface HotelRepository {
     List<Hotel> znajdzHotele(Uzytkownik uzytkownik);
 
+    List<Hotel> znajdzHotele(String miasto);
+
     Hotel znajdzHotelPracownika(Uzytkownik pracownik);
 
     void addHotel(Uzytkownik kierownik, Hotel hotel);
