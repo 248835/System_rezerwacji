@@ -20,11 +20,6 @@ import java.util.Map;
 @Controller
 @RequestMapping("/uzytkownik")
 public class KlientKontroler {
-    private HotelRepository hotelRepository = ObjectHotelRepository.getInstance();
-    private RezerwacjaRepository rezerwacjaRepository = ObjectRezerwacjaRepository.getInstance();
-    private PokojRepository pokojRepository = ObjectPokojRepository.getInstance();
-    private UzytkownikRepository uzytkownikRepository = ObjectUzytkownikRepository.getInstance();
-
 //    @Autowired
 //    public KlientKontroler(ObjectHotelRepository hotelRepository, ObjectRezerwacjaRepository jdbcRezerwacjaRepository) {   //todo
 //        this.hotelRepository = hotelRepository;
@@ -34,7 +29,7 @@ public class KlientKontroler {
     //https://stackoverflow.com/questions/23144358/how-to-loop-through-map-in-thymeleaf
     @RequestMapping(method = RequestMethod.GET)
     public Map<Hotel,List<Pokoj>> pokazOferty(String adres, Date poczatek, Date koniec){
-        return pokojRepository.znajdzOferty(adres,poczatek,koniec);
+        return null;
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -53,7 +48,6 @@ public class KlientKontroler {
 
     @RequestMapping(method = RequestMethod.POST, value = "/oferty/{nazwaHotelu}")
     public String wybierzOferte(Rezerwacja rezerwacja){
-        rezerwacjaRepository.dodajRezerwacje(rezerwacja, getUzytkownik());
         return "redirect:";
     }
 
@@ -64,8 +58,6 @@ public class KlientKontroler {
 
     @RequestMapping(method = RequestMethod.POST, value = "/usunKonto")
     public void usunKontoProcess(){
-
-        uzytkownikRepository.usunUzytkownika(getUzytkownik());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/modyfikujKonto")
@@ -75,7 +67,6 @@ public class KlientKontroler {
 
     @RequestMapping(method = RequestMethod.POST,value = "/modyfikujKonto")
     public void modyfikujKontoProcess(Uzytkownik uzytkownik){
-        uzytkownikRepository.modyfikujUzytkownik(uzytkownik);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/modyfikujRezerwacje")
@@ -85,7 +76,6 @@ public class KlientKontroler {
 
     @RequestMapping(method = RequestMethod.POST,value = "/modyfikujRezerwacje")
     public void modyfikujRezerwacjeProcess(Rezerwacja rezerwacja){
-        rezerwacjaRepository.modyfikujRezerwacje(rezerwacja,getUzytkownik());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/usunRezerwacje")
@@ -95,7 +85,6 @@ public class KlientKontroler {
 
     @RequestMapping(method = RequestMethod.POST,value = "/usumRezerwacje")
     public void usunRezerwacjeProcess(Rezerwacja rezerwacja){
-        rezerwacjaRepository.usunRezerwacje(rezerwacja);
     }
 
     private Uzytkownik getUzytkownik(){
@@ -107,6 +96,6 @@ public class KlientKontroler {
             username = principal.toString();
         }
 
-        return uzytkownikRepository.znajdzUzytkownika(username);
+        return null;
     }
 }

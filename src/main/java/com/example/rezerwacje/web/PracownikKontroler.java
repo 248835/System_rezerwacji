@@ -1,7 +1,5 @@
 package com.example.rezerwacje.web;
 
-import com.example.rezerwacje.data.ObjectRezerwacjaRepository;
-import com.example.rezerwacje.data.ObjectUzytkownikRepository;
 import com.example.rezerwacje.data.RezerwacjaRepository;
 import com.example.rezerwacje.data.UzytkownikRepository;
 import com.example.rezerwacje.rezerwacja.Rezerwacja;
@@ -17,9 +15,6 @@ import java.util.List;
 @Controller
 @RequestMapping("/pracownik")
 public class PracownikKontroler {
-    private RezerwacjaRepository rezerwacjaRepository = ObjectRezerwacjaRepository.getInstance();
-    private UzytkownikRepository uzytkownikRepository = ObjectUzytkownikRepository.getInstance();
-
 //    @Autowired
 //    public PracownikKontroler(ObjectRezerwacjaRepository jdbcRezerwacjaRepository, ObjectUzytkownikRepository jdbcUzytkownikRepository) {
 //        this.jdbcRezerwacjaRepository = jdbcRezerwacjaRepository;
@@ -36,9 +31,7 @@ public class PracownikKontroler {
             username = principal.toString();
         }
 
-        Uzytkownik pracownik = uzytkownikRepository.znajdzUzytkownika(username);
-
-        return rezerwacjaRepository.znajdzRezerwacjePracownik(pracownik);
+        return null;
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -54,7 +47,6 @@ public class PracownikKontroler {
 
     @RequestMapping(method = RequestMethod.POST, value = "/rezerwacja")
     public String oplacRezerwacje(Rezerwacja rezerwacja){
-        rezerwacjaRepository.usunRezerwacje(rezerwacja);
         platnosc(rezerwacja);
 
         return "redirect:/pracownik";

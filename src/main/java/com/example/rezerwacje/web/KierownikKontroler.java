@@ -18,11 +18,6 @@ import java.util.Set;
 @Controller
 @RequestMapping("/kierownik")
 public class KierownikKontroler {
-    private UzytkownikRepository uzytkownikRepository = ObjectUzytkownikRepository.getInstance();
-    private HotelRepository hotelRepository = ObjectHotelRepository.getInstance();
-    private PokojRepository pokojRepository = ObjectPokojRepository.getInstance();
-    private RezerwacjaRepository rezerwacjaRepository = ObjectRezerwacjaRepository.getInstance();
-
 //    @Autowired
 //    public KierownikKontroler(ObjectUzytkownikRepository jdbcUzytkownikRepository, ObjectHotelRepository objectHotelRepository, ObjectPokojRepository jdbcPokojRepository, ObjectRezerwacjaRepository jdbcRezerwacjaRepository) {
 //        this.jdbcUzytkownikRepository = jdbcUzytkownikRepository;
@@ -31,37 +26,36 @@ public class KierownikKontroler {
 //        this.jdbcRezerwacjaRepository = jdbcRezerwacjaRepository;
 //    }
 
-    @RequestMapping(method = RequestMethod.GET)
-    public List<Hotel> ekranGlownyHotele(){
-
-        return hotelRepository.znajdzHotele(getKierownik());
-    }
-
-    @RequestMapping(method = RequestMethod.GET)
-    public List<Uzytkownik> ekranGlownyPracownicy(){
-
-        return uzytkownikRepository.znajdzPracownikow(getKierownik());
-    }
-
-    @RequestMapping(method = RequestMethod.POST)
-    public String ekranGlownyWybor(){
-        String string=null;
-        // todo logika wyboru miedzy wyborem hotelu, dodaniem hotelu, dodaniem pracownika - zwraca odpowiedni widok
-        return string;
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/hotele")
-    public List<Rezerwacja> listaRezerwacji(Hotel hotel){
-
-        return rezerwacjaRepository.znajdzRezerwacje(hotel);
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/hotele")
-    public Set<Pokoj> listaPokoi(Hotel hotel){
-
-        //todo logika wyboru hotelu
-        return pokojRepository.znajdzPokoje(getKierownik(),hotel);
-    }
+//    @RequestMapping(method = RequestMethod.GET)
+//    public List<Hotel> ekranGlownyHotele(){
+//
+//        return null;
+//    }
+//
+//    @RequestMapping(method = RequestMethod.GET)
+//    public List<Uzytkownik> pokazPracownikow(){
+//
+//        return null;
+//    }
+//
+//    @RequestMapping(method = RequestMethod.POST)
+//    public String ekranGlownyWybor(){
+//        // todo logika wyboru miedzy wyborem hotelu, dodaniem hotelu, dodaniem pracownika - zwraca odpowiedni widok
+//        return null;
+//    }
+//
+//    @RequestMapping(method = RequestMethod.GET, value = "/hotele")
+//    public List<Rezerwacja> listaRezerwacji(Hotel hotel){
+//
+//        return null;
+//    }
+//
+//    @RequestMapping(method = RequestMethod.GET, value = "/hotele")
+//    public Set<Pokoj> listaPokoi(Hotel hotel){
+//
+//        //todo logika wyboru hotelu
+//        return null;
+//    }
 
     @RequestMapping(method = RequestMethod.POST, value = "/hotel")
     public String wyborZHotele(){
@@ -77,7 +71,6 @@ public class KierownikKontroler {
 
     @RequestMapping(method = RequestMethod.POST, value = "/hotel/submit")
     public String przetworzHotelForm(Hotel hotel){
-        hotelRepository.addHotel(getKierownik(),hotel);
 
         return "redirect:/kierownik";
     }
@@ -89,7 +82,6 @@ public class KierownikKontroler {
 
     @RequestMapping(method = RequestMethod.POST, value = "/pokoj/submit")
     public String przetworzPokojForm(Pokoj pokoj, Hotel hotel){
-        pokojRepository.dodajPokoj(pokoj,hotel);
 
         return "redirect:/kierownik";
     }
@@ -101,7 +93,6 @@ public class KierownikKontroler {
 
     @RequestMapping(method = RequestMethod.POST, value = "/pracownik/submit")
     public String przetworzPracownikForm(Uzytkownik pracownik){
-        uzytkownikRepository.addPracownik(pracownik,getKierownik());
 
         return "redirect:/kierownik";
     }
@@ -113,7 +104,6 @@ public class KierownikKontroler {
 
     @RequestMapping(method = RequestMethod.POST, value = "/pracownik/usun")
     public void usunPracownikProcess(Uzytkownik pracownik){
-        uzytkownikRepository.usunPracownika(pracownik,getKierownik());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/pracownik/modyfikuj")
@@ -123,7 +113,6 @@ public class KierownikKontroler {
 
     @RequestMapping(method = RequestMethod.POST, value = "/pracownik/modyfikuj")
     public void modyfikujPracownikProcess(Uzytkownik pracownik){
-        uzytkownikRepository.modyfikujPracownik(pracownik,getKierownik());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/hotel/modyfikuj")
@@ -133,17 +122,15 @@ public class KierownikKontroler {
 
     @RequestMapping(method = RequestMethod.POST, value = "/hotel/modyfikuj")
     public void modyfikujHotelProcess(Hotel hotel){
-        hotelRepository.modyfikujHotel(hotel);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/hotel/usun")
     public String usunHotel(Hotel hotel){
-        return "uusnHotel";
+        return "usunHotel";
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/hotel/usun")
     public void usunHotelProcess(Hotel hotel){
-        hotelRepository.usunHotel(hotel);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/pokoj/modyfikuj")
@@ -153,7 +140,6 @@ public class KierownikKontroler {
 
     @RequestMapping(method = RequestMethod.POST, value = "/pokoj/modyfikuj")
     public void modyfikujPokojProcess(Pokoj pokoj){
-        pokojRepository.modyfikujPokoj(pokoj);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/pokoj/usun")
@@ -163,7 +149,6 @@ public class KierownikKontroler {
 
     @RequestMapping(method = RequestMethod.POST, value = "/pokoj/usun")
     public void usunPokojProcess(Pokoj pokoj){
-        pokojRepository.usunPokoj(pokoj);
     }
 
     private Uzytkownik getKierownik(){
@@ -175,6 +160,6 @@ public class KierownikKontroler {
             username = principal.toString();
         }
 
-        return uzytkownikRepository.znajdzUzytkownika(username);
+        return null;
     }
 }

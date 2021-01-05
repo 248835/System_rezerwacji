@@ -20,4 +20,6 @@ public interface UzytkownikRepository{
     void modyfikujUzytkownik(Uzytkownik uzytkownik);
 
     void modyfikujPracownik(Uzytkownik pracownik, Uzytkownik kierownik);
+
+    Uzytkownik getUzytkownik();
 }
