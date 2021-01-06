@@ -11,39 +11,24 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 
-    <title>Znalezione hotele</title>
-</head>
-<head>
-    <meta charset="UTF-8">
     <title>Hotele</title>
 </head>
 <body>
 <div class="listTitle">
     <h1>Hotele w danym mieście</h1>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th scope="col">Nazwa</th>
-            <th scope="col">Ulica</th>
-            <th scope="col">Ocena</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <li th:each="hotel : ${hotelList}">
-                <th scope="col">
-                    <div th:text="${hotel.nazwa}"/>
-                </th>
-                <th scope="col">
-                    <div th:text="${hotel.ulica}"/>
-                </th>
-                <th scope="col">
-                    <div th:text="${hotel.ocena}"/>
-                </th>
-            </li>
-        </tr>
-        </tbody>
-    </table>
+
+    <div class="list-group">
+        <li th:each="hotel : ${hotelList}">
+            <a th:href="@{'/' + ${miasto} + '/' + ${hotel.nazwa}}" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Hotel <span th:text="${hotel.nazwa}"/></h5>
+                    <small class="text-muted">Ocena: <span th:text="${hotel.ocena}"/></small>
+                </div>
+                <p class="mb-1">Opis, który może to ogarnę, a może nie ogarnę ¯\_(ツ)_/¯</p>
+                <small class="text-muted">Adres: <span th:text="${miasto} + ' ' + ${hotel.ulica}"/></small>
+            </a>
+        </li>
+    </div>
 </div>
 </body>
 </html>

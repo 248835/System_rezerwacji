@@ -15,6 +15,8 @@ public interface HotelRepository {
 
     Hotel znajdzHotelPracownika(Uzytkownik pracownik);
 
+    Hotel znajdzHotel(String miasto, String nazwa);
+
     void addHotel(Uzytkownik kierownik, Hotel hotel);
 
     void modyfikujHotel(Hotel hotel);
