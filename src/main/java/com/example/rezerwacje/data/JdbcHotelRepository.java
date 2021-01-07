@@ -39,7 +39,7 @@ public class JdbcHotelRepository implements HotelRepository {
 
     @Override
     public Hotel znajdzHotel(String miasto, String nazwa) {
-        return jdbcTemplate.query(ZNAJDZ_MIASTO_NAZWA, this::mapRow,miasto,nazwa).get(0);
+        return jdbcTemplate.queryForObject(ZNAJDZ_MIASTO_NAZWA, this::mapRow,miasto,nazwa);
     }
 
     @Override

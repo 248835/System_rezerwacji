@@ -14,7 +14,8 @@ import java.util.Map;
 
 @Repository
 public class JdbcPokojRepository implements PokojRepository{
-    private static final String ZNAJDZ_HOTEL = "select * from pokoje where id_hotelu = ?";
+    private static final String SELECT_FROM_POKOJE_WHERE_ID_HOTELU = "select * from pokoje where id_hotelu = ?";
+    private static final String SELECT_FROM_POKOJE_WHERE_ID = "select * from pokoje where id = ?";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -25,13 +26,12 @@ public class JdbcPokojRepository implements PokojRepository{
 
     @Override
     public List<Pokoj> znajdzPokoje(Hotel hotel) {
-        System.out.println("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee " + hotel.getId());
-        List<Pokoj> pokoje = jdbcTemplate.query(ZNAJDZ_HOTEL, this::mapRow,hotel.getId());
-        System.out.println();
-        for (Pokoj pokoj : pokoje){
-            System.out.println(pokoj.getRodzaj());
-        }
-        return pokoje;
+        return jdbcTemplate.query(SELECT_FROM_POKOJE_WHERE_ID_HOTELU, this::mapRow,hotel.getId());
+    }
+
+    @Override
+    public Pokoj znajdzPokoj(int id) {
+        return jdbcTemplate.queryForObject(SELECT_FROM_POKOJE_WHERE_ID,this::mapRow,id);
     }
 
     @Override

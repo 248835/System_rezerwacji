@@ -23,6 +23,9 @@ public class Pokoj {
         this.cena = cena;
     }
 
+    public Pokoj() {
+    }
+
     public int getId() {
         return id;
     }

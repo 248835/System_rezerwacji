@@ -1,8 +1,6 @@
 package com.example.rezerwacje.uzytkownik;
 
 public class Uzytkownik {
-    private int id;
-
     private String nazwa;
 
     private String haslo;
@@ -13,15 +11,6 @@ public class Uzytkownik {
 
     private String rola;
 
-    public Uzytkownik(int id, String nazwa, String haslo, String imie, String nazwisko, String rola) {
-        this.id = id;
-        this.nazwa = nazwa;
-        this.haslo = haslo;
-        this.imie = imie;
-        this.nazwisko = nazwisko;
-        this.rola = rola;
-    }
-
     public Uzytkownik(String nazwa, String haslo, String imie, String nazwisko, String rola) {
         this.nazwa = nazwa;
         this.haslo = haslo;
@@ -30,12 +19,8 @@ public class Uzytkownik {
         this.rola = rola;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public Uzytkownik(String nazwa) {
+        this.nazwa = nazwa;
     }
 
     public String getNazwa() {

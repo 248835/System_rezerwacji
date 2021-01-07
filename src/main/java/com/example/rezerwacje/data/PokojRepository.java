@@ -10,6 +10,8 @@ import java.util.Map;
 public interface PokojRepository {
     List<Pokoj> znajdzPokoje(Hotel hotel);
 
+    Pokoj znajdzPokoj(int id);
+
     Map<Hotel, List<Pokoj>> znajdzOferty(String adres, Date poczatek, Date koniec);
 
     void dodajPokoj(Pokoj pokoj, Hotel hotel);

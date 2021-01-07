@@ -23,6 +23,9 @@ public class Hotel {
         this.id = id;
     }
 
+    public Hotel() {
+    }
+
     public String getNazwa() {
         return nazwa;
     }
