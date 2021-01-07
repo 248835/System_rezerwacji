@@ -3,6 +3,7 @@ package com.example.rezerwacje.web;
 import com.example.rezerwacje.data.HotelRepository;
 import com.example.rezerwacje.data.PokojRepository;
 import com.example.rezerwacje.data.RezerwacjaRepository;
+import com.example.rezerwacje.data.UzytkownikRepository;
 import com.example.rezerwacje.hotel.Hotel;
 import com.example.rezerwacje.hotel.Pokoj;
 import com.example.rezerwacje.rezerwacja.Rezerwacja;
@@ -10,6 +11,8 @@ import com.example.rezerwacje.uzytkownik.Uzytkownik;
 import com.example.rezerwacje.web.forms.MiastoForm;
 import com.example.rezerwacje.web.forms.RezerwacjaForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,12 +32,14 @@ public class HomeKontroler {
     private final HotelRepository hotelRepository;
     private final PokojRepository pokojRepository;
     private final RezerwacjaRepository rezerwacjaRepository;
+    private final UzytkownikRepository uzytkownikRepository;
 
     @Autowired
-    public HomeKontroler(HotelRepository hotelRepository, PokojRepository pokojRepository, RezerwacjaRepository rezerwacjaRepository) {
+    public HomeKontroler(HotelRepository hotelRepository, PokojRepository pokojRepository, RezerwacjaRepository rezerwacjaRepository, UzytkownikRepository uzytkownikRepository) {
         this.hotelRepository = hotelRepository;
         this.pokojRepository = pokojRepository;
         this.rezerwacjaRepository = rezerwacjaRepository;
+        this.uzytkownikRepository = uzytkownikRepository;
     }
 
     // GET - kiedy nie zmieniasz nic na serwerze
@@ -73,7 +78,6 @@ public class HomeKontroler {
         return "hotel";
     }
 
-    //DateTimeFormat
     @RequestMapping(value = "/{miasto}/{nazwa}/{id}", method = GET)
     public String pokoj(@PathVariable String miasto, @PathVariable String nazwa, @PathVariable int id, Model model) {
         Hotel hotel = hotelRepository.znajdzHotel(miasto, nazwa);
@@ -95,8 +99,8 @@ public class HomeKontroler {
                              RedirectAttributes redirectAttributes, RezerwacjaForm rezerwacjaForm) {
         rezerwacjaForm.setHotel(hotelRepository.znajdzHotel(miasto, nazwa));
         rezerwacjaForm.setPokoj(pokojRepository.znajdzPokoj(id));
-        //todo faktyczny uzytkownik
-        Rezerwacja rezerwacja = new Rezerwacja(rezerwacjaForm, new Uzytkownik("dziwak"));
+        Rezerwacja rezerwacja = new Rezerwacja(rezerwacjaForm, getUzytkownik());
+        System.out.println(rezerwacja.getUzytkownik().getNazwa());
         rezerwacjaRepository.dodajRezerwacje(rezerwacja);
         rezerwacja.setId(rezerwacjaRepository.znajdzIdRezerwacji(rezerwacja));
 
@@ -121,5 +125,17 @@ public class HomeKontroler {
         model.addAttribute("cena",diff * rezerwacja.getPokoj().getCena());
 
         return "rezerwacja";
+    }
+
+    private Uzytkownik getUzytkownik(){
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username;
+        if(principal instanceof UserDetails){
+            username = ((UserDetails)principal).getUsername();
+        }else{
+            username = principal.toString();
+        }
+
+        return uzytkownikRepository.znajdzUzytkownika(username);
     }
 }

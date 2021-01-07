@@ -21,5 +21,4 @@ public interface UzytkownikRepository{
 
     void modyfikujPracownik(Uzytkownik pracownik, Uzytkownik kierownik);
 
-    Uzytkownik getUzytkownik();
 }

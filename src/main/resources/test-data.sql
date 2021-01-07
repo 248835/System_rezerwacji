@@ -1,23 +1,23 @@
 INSERT INTO UZYTKOWNICY(NAZWA, HASLO, IMIE, NAZWISKO, ROLA, NAZWA_KIEROWNIKA)
-VALUES ('j4ku6','$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG','Jakub','Lechnicki','Klient',null);
+VALUES ('j4ku6','$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG','Jakub','Lechnicki','ROLE_KLIENT',null);
 INSERT INTO UZYTKOWNICY(NAZWA, HASLO, IMIE, NAZWISKO, ROLA, NAZWA_KIEROWNIKA)
-VALUES ('nowak1234','$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG','Dawid','Nowakowski','Kierownik',null);
+VALUES ('nowak1234','$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG','Dawid','Nowakowski','ROLE_KIEROWNIK',null);
 INSERT INTO UZYTKOWNICY(NAZWA, HASLO, IMIE, NAZWISKO, ROLA, NAZWA_KIEROWNIKA)
-VALUES ('sebix666','$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG','Sebastian','Germanski','Pracownik','nowak1234');
+VALUES ('sebix666','$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG','Sebastian','Germanski','ROLE_PRACOWNIK','nowak1234');
 INSERT INTO UZYTKOWNICY(NAZWA, HASLO, IMIE, NAZWISKO, ROLA, NAZWA_KIEROWNIKA)
-VALUES ('roman89','$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG','Pawel','Romanowski','Pracownik','nowak1234');
+VALUES ('roman89','$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG','Pawel','Romanowski','ROLE_PRACOWNIK','nowak1234');
 INSERT INTO UZYTKOWNICY(NAZWA, HASLO, IMIE, NAZWISKO, ROLA, NAZWA_KIEROWNIKA)
-VALUES ('Ferdydurke','$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG','Witold','Piasecki','Kierownik',null);
+VALUES ('Ferdydurke','$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG','Witold','Piasecki','ROLE_KIEROWNIK',null);
 INSERT INTO UZYTKOWNICY(NAZWA, HASLO, IMIE, NAZWISKO, ROLA, NAZWA_KIEROWNIKA)
-VALUES ('haB17','$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG','Anastazja','Drezniecka','Klient',null);
+VALUES ('haB17','$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG','Anastazja','Drezniecka','ROLE_KLIENT',null);
 INSERT INTO UZYTKOWNICY(NAZWA, HASLO, IMIE, NAZWISKO, ROLA, NAZWA_KIEROWNIKA)
-VALUES ('tom99','$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG','Tomasz','Kowalski','Pracownik','Ferdydurke');
+VALUES ('tom99','$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG','Tomasz','Kowalski','ROLE_PRACOWNIK','Ferdydurke');
 INSERT INTO UZYTKOWNICY(NAZWA, HASLO, IMIE, NAZWISKO, ROLA, NAZWA_KIEROWNIKA)
-VALUES ('dziwak','$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG','Jan','Nowakowski','Klient',null);
+VALUES ('dziwak','$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG','Jan','Nowakowski','ROLE_KLIENT',null);
 INSERT INTO UZYTKOWNICY(NAZWA, HASLO, IMIE, NAZWISKO, ROLA, NAZWA_KIEROWNIKA)
-VALUES ('texter','$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG','Jan','Piasecki','Pracownik','Ferdydurke');
+VALUES ('texter','$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG','Jan','Piasecki','ROLE_PRACOWNIK','Ferdydurke');
 INSERT INTO UZYTKOWNICY(NAZWA, HASLO, IMIE, NAZWISKO, ROLA, NAZWA_KIEROWNIKA)
-VALUES ('gedyr','$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG','Jakub','Tkacz','Pracownik','nowak1234');
+VALUES ('gedyr','$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG','Jakub','Tkacz','ROLE_PRACOWNIK','nowak1234');
 
 INSERT INTO HOTELE(NAZWA, MIASTO, ULICA, OCENA, NAZWA_KIEROWNIKA)
 VALUES ('Apollo','Wroclaw','Karlowicza',3,'nowak1234');

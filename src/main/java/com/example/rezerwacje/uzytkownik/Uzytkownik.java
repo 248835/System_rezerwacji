@@ -2,14 +2,11 @@ package com.example.rezerwacje.uzytkownik;
 
 public class Uzytkownik {
     private String nazwa;
-
     private String haslo;
-
     private String imie;
-
     private String nazwisko;
-
     private String rola;
+    private String nazwaKierownika;
 
     public Uzytkownik(String nazwa, String haslo, String imie, String nazwisko, String rola) {
         this.nazwa = nazwa;
@@ -17,6 +14,15 @@ public class Uzytkownik {
         this.imie = imie;
         this.nazwisko = nazwisko;
         this.rola = rola;
+    }
+
+    public Uzytkownik(String nazwa, String haslo, String imie, String nazwisko, String rola, String nazwaKierownika) {
+        this.nazwa = nazwa;
+        this.haslo = haslo;
+        this.imie = imie;
+        this.nazwisko = nazwisko;
+        this.rola = rola;
+        this.nazwaKierownika = nazwaKierownika;
     }
 
     public Uzytkownik(String nazwa) {
@@ -61,5 +67,13 @@ public class Uzytkownik {
 
     public void setRola(String rola) {
         this.rola = rola;
+    }
+
+    public String getNazwaKierownika() {
+        return nazwaKierownika;
+    }
+
+    public void setNazwaKierownika(String nazwaKierownika) {
+        this.nazwaKierownika = nazwaKierownika;
     }
 }
