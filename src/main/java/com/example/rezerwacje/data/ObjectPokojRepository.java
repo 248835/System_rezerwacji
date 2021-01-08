@@ -23,13 +23,14 @@ public class ObjectPokojRepository implements PokojRepository{
         return pokoje1;
     }
 
+    //fixme
     @Override
-    public Map<Hotel, List<Pokoj>> znajdzOferty(String adres, Date poczatek, Date koniec) {
+    public Map<Hotel, List<Pokoj>> znajdzOferty(String miasto, Date poczatek, Date koniec) {
         Map<Hotel, List<Pokoj>> oferty = new HashMap<>();
         for (Pokoj pokoj : pokoje.keySet()){
             Hotel hotel = pokoje.get(pokoj);
-            if (hotel.getAdres().equals(adres)
-                    && !(pokoj.getPoczatekRezerwacji().compareTo(poczatek) <= 0 && pokoj.getKoniecRezerwacji().compareTo(koniec) >= 0)){
+            if (hotel.getMiasto().equals(miasto)
+                    /*&& !(pokoj.getPoczatekRezerwacji().compareTo(poczatek) <= 0 && pokoj.getKoniecRezerwacji().compareTo(koniec) >= 0)*/){
                 if (!oferty.containsKey(hotel)) {
                     oferty.put(hotel, new ArrayList<>());
                 }

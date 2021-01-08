@@ -1,45 +1,29 @@
 package com.example.rezerwacje.hotel;
 
-import java.util.Date;
-
 public class Pokoj {
     private int id;
-    private int nr;
+    private int numer;
+    private int rodzaj;
+    private int rozmiar;
     private int cena;
-    private int ocena;
-    private int liczbaOsob;
-    private Date poczatekRezerwacji;
-    private Date koniecRezerwacji;
 
-    public Pokoj(int nr, int cena, int ocena, int liczbaOsob) {
-        this.nr = nr;
-        this.cena = cena;
-        this.ocena = ocena;
-        this.liczbaOsob = liczbaOsob;
-    }
-
-    public Pokoj(int id, int nr, int cena, int ocena, int liczbaOsob) {
+    public Pokoj(int id, int nr, int rodzaj, int rozmiar, int cena) {
         this.id = id;
-        this.nr = nr;
+        this.numer = nr;
+        this.rodzaj = rodzaj;
+        this.rozmiar = rozmiar;
         this.cena = cena;
-        this.ocena = ocena;
-        this.liczbaOsob = liczbaOsob;
     }
 
-    public Date getPoczatekRezerwacji() {
-        return poczatekRezerwacji;
+    public Pokoj(int nr, int rodzaj, int rozmiar, int cena) {
+
+        this.numer = nr;
+        this.rodzaj = rodzaj;
+        this.rozmiar = rozmiar;
+        this.cena = cena;
     }
 
-    public void setPoczatekRezerwacji(Date poczatekRezerwacji) {
-        this.poczatekRezerwacji = poczatekRezerwacji;
-    }
-
-    public Date getKoniecRezerwacji() {
-        return koniecRezerwacji;
-    }
-
-    public void setKoniecRezerwacji(Date koniecRezerwacji) {
-        this.koniecRezerwacji = koniecRezerwacji;
+    public Pokoj() {
     }
 
     public int getId() {
@@ -48,5 +32,37 @@ public class Pokoj {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getNumer() {
+        return numer;
+    }
+
+    public void setNumer(int numer) {
+        this.numer = numer;
+    }
+
+    public int getRodzaj() {
+        return rodzaj;
+    }
+
+    public void setRodzaj(int rodzaj) {
+        this.rodzaj = rodzaj;
+    }
+
+    public int getRozmiar() {
+        return rozmiar;
+    }
+
+    public void setRozmiar(int rozmiar) {
+        this.rozmiar = rozmiar;
+    }
+
+    public int getCena() {
+        return cena;
+    }
+
+    public void setCena(int cena) {
+        this.cena = cena;
     }
 }
