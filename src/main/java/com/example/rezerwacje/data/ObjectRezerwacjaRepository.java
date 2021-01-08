@@ -8,7 +8,7 @@ import com.example.rezerwacje.uzytkownik.Uzytkownik;
 import java.util.*;
 
 public class ObjectRezerwacjaRepository implements RezerwacjaRepository{
-    private static ObjectRezerwacjaRepository rezerwacja_instance = null;   //todo zmienic na bean
+    private static ObjectRezerwacjaRepository rezerwacja_instance = null;
     private final Map<Uzytkownik,List<Rezerwacja>> rezerwacje = new HashMap<>();
 
     public List<Rezerwacja> znajdzRezerwacje(Hotel hotel){
