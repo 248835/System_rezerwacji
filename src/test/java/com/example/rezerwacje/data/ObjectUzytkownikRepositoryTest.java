@@ -5,10 +5,12 @@ import com.example.rezerwacje.uzytkownik.Uzytkownik;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.*;
 
+@Category({TestDodawanie.class,TestUsuwanie.class})
 public class ObjectUzytkownikRepositoryTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
@@ -34,5 +36,12 @@ public class ObjectUzytkownikRepositoryTest {
         expectedException.expect(UzytkownikRepositoryException.class);
         expectedException.expectMessage("Proba dodania istniejacego uzytkownika");
         ObjectUzytkownikRepository.getInstance().addUzytkownik(Dane.getKlient().get(0));
+    }
+
+    @Test
+    public void usunUzytkownika(){
+        System.out.println(">>> Usun uzytkownika");
+        ObjectUzytkownikRepository.getInstance().usunUzytkownika(Dane.getKlient().get(0));
+        assertNull(ObjectUzytkownikRepository.getInstance().znajdzUzytkownika(Dane.getKlient().get(0).getNazwa()));
     }
 }
