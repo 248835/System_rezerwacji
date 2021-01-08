@@ -23,7 +23,10 @@ public class ObjectUzytkownikRepository implements UzytkownikRepository {
     }
 
     @Override
-    public void addUzytkownik(Uzytkownik uzytkownik) {
+    public void addUzytkownik(Uzytkownik uzytkownik) throws UzytkownikRepositoryException {
+        if (znajdzUzytkownika(uzytkownik.getNazwa())!=null){
+            throw new UzytkownikRepositoryException("Proba dodania istniejacego uzytkownika");
+        }
         if (uzytkownik.getRola().equals("KIEROWNIK"))
             KierownikTable.getInstance().addKierownik(uzytkownik);
         uzytkownicy.add(uzytkownik);
@@ -48,7 +51,7 @@ public class ObjectUzytkownikRepository implements UzytkownikRepository {
     }
 
     @Override
-    public void modyfikujUzytkownik(Uzytkownik uzytkownik) {
+    public void modyfikujUzytkownik(Uzytkownik uzytkownik) throws UzytkownikRepositoryException {
         usunUzytkownika(uzytkownik);
         List<Rezerwacja> rezerwacje = ObjectRezerwacjaRepository.getInstance().znajdzRezerwacje(uzytkownik);
         ObjectRezerwacjaRepository.getInstance().usunUzytkownika(uzytkownik);

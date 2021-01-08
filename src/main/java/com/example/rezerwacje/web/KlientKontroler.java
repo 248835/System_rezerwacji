@@ -74,7 +74,7 @@ public class KlientKontroler {
     }
 
     @RequestMapping(method = RequestMethod.POST,value = "/modyfikujKonto")
-    public void modyfikujKontoProcess(Uzytkownik uzytkownik){
+    public void modyfikujKontoProcess(Uzytkownik uzytkownik) throws UzytkownikRepositoryException {
         uzytkownikRepository.modyfikujUzytkownik(uzytkownik);
     }
 

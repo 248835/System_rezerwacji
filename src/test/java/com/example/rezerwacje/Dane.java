@@ -1,9 +1,6 @@
 package com.example.rezerwacje;
 
-import com.example.rezerwacje.data.ObjectHotelRepository;
-import com.example.rezerwacje.data.ObjectPokojRepository;
-import com.example.rezerwacje.data.ObjectRezerwacjaRepository;
-import com.example.rezerwacje.data.ObjectUzytkownikRepository;
+import com.example.rezerwacje.data.*;
 import com.example.rezerwacje.hotel.Hotel;
 import com.example.rezerwacje.hotel.Pokoj;
 import com.example.rezerwacje.rezerwacja.Rezerwacja;
@@ -14,9 +11,9 @@ import java.util.*;
 public class Dane {
     private static final List<Uzytkownik> uzytkownicy = new ArrayList<Uzytkownik>(Arrays.asList(
             new Uzytkownik("uzytkownik1","haslo1","imie1","nazwisko1","KLIENT"),
-            new Uzytkownik("uzytkownik2","haslo2","imie2","nazwisko2","PRACOWNIK","uzytkownik3"),
             new Uzytkownik("uzytkownik3","haslo3","imie3","nazwisko3","KIEROWNIK"),
             new Uzytkownik("uzytkownik8","haslo8","imie8","nazwisko8","KIEROWNIK"),
+            new Uzytkownik("uzytkownik2","haslo2","imie2","nazwisko2","PRACOWNIK","uzytkownik3"),
             new Uzytkownik("uzytkownik4","haslo4","imie4","nazwisko4","KLIENT"),
             new Uzytkownik("uzytkownik5","haslo5","imie5","nazwisko5","KLIENT"),
             new Uzytkownik("uzytkownik6","haslo6","imie6","nazwisko6","PRACOWNIK","uzytkownik3"),
@@ -47,14 +44,14 @@ public class Dane {
     }
 
     private static Uzytkownik getKierownik(Uzytkownik pracownik){
-        for (Uzytkownik kierownik : getKierownik()){
+        for (Uzytkownik kierownik : uzytkownicy){
             if (kierownik.getNazwa().equals(pracownik.getNazwaKierownika()))
                 return kierownik;
         }
         return null;
     }
 
-    public static void setObjectUzytkownikRepository() {
+    public static void setObjectUzytkownikRepository() throws UzytkownikRepositoryException {
         for (Uzytkownik uzytkownik : uzytkownicy){
             if (uzytkownik.getRola().equals("PRACOWNIK")){
                 ObjectUzytkownikRepository.getInstance().addPracownik(uzytkownik,getKierownik(uzytkownik));

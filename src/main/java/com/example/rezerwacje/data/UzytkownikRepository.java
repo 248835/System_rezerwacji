@@ -9,7 +9,7 @@ public interface UzytkownikRepository{
 
     List<Uzytkownik> znajdzPracownikow(Uzytkownik id);
 
-    void addUzytkownik(Uzytkownik uzytkownik);
+    void addUzytkownik(Uzytkownik uzytkownik) throws UzytkownikRepositoryException;
 
     void addPracownik(Uzytkownik pracownik, Uzytkownik kierownik);
 
@@ -17,7 +17,7 @@ public interface UzytkownikRepository{
 
     void usunPracownika(Uzytkownik pracownik, Uzytkownik kierownik);
 
-    void modyfikujUzytkownik(Uzytkownik uzytkownik);
+    void modyfikujUzytkownik(Uzytkownik uzytkownik) throws UzytkownikRepositoryException;
 
     void modyfikujPracownik(Uzytkownik pracownik, Uzytkownik kierownik);
 }
