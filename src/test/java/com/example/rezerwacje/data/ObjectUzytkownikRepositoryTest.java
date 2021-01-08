@@ -7,10 +7,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import static org.junit.Assert.*;
 
 @Category({TestDodawanie.class,TestUsuwanie.class})
+//@RunWith(Parameterized.class)
 public class ObjectUzytkownikRepositoryTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
