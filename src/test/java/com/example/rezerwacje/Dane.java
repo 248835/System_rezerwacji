@@ -9,6 +9,7 @@ import com.example.rezerwacje.uzytkownik.Uzytkownik;
 import java.util.*;
 
 public class Dane {
+
     private static final List<Uzytkownik> uzytkownicy = new ArrayList<Uzytkownik>(Arrays.asList(
             new Uzytkownik("uzytkownik1","haslo1","imie1","nazwisko1","KLIENT"),
             new Uzytkownik("uzytkownik3","haslo3","imie3","nazwisko3","KIEROWNIK"),

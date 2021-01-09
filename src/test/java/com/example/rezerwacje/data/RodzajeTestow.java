@@ -5,3 +5,6 @@ interface TestDodawanie {
 
 interface TestUsuwanie {
 }
+
+interface TestZnajdywanie {
+}
