@@ -11,9 +11,27 @@
 
     <title>Pokoj</title>
 </head>
+<style>
+    span.error {
+        color: red;
+    }
+
+    div.errors {
+        background-color: #ffcccc;
+        border: 2px solid red;
+    }
+
+    label.error {
+        color: red;
+    }
+
+    input.error {
+        background-color: #ffcccc;
+    }
+</style>
 <body>
 <div id="header" th:include="page :: header"></div>
-<div class="list-group">
+<div class="list-group container">
     <div class="list-group-item list-group-item-action active" aria-current="true">
         <div class="d-flex w-100 justify-content-between">
             <h4 class="mb-1">Hotel <span th:text="${nazwa}"/></h4>
@@ -32,17 +50,24 @@
 <div class="container">
     <h4 class="text-center">Wybierz termin</h4>
     <form method="POST" th:object="${rezerwacjaForm}" th:action="@{'/' + ${miasto} + '/' + ${nazwa} + '/' + ${pokoj.id}}">
+        <div class="errors" th:if="${#fields.hasErrors('*')}">
+            <div class="list-group">
+                <div class="list-group-item active" aria-current="true">Wprowadzone dane zawierają błędy</div>
+                <div th:each="err : ${#fields.errors('*')}"
+                     th:text="${err}">Wprowadzone dane zawierają błędy</div>
+            </div>
+        </div>
         <div class="row g-2">
             <div class="col-md">
                 <div class="form-floating">
-                    <input type="date" th:field="*{poczatekRezerwacji}" class="form-control" id="poczatekRezerwacji">
-                    <label for="poczatekRezerwacji">Początek rezerwacji</label>
+                    <input type="date" th:field="*{poczatekRezerwacji}" th:classappend="${#fields.hasErrors('poczatekRezerwacji')}? 'error'" th:class="form-control" id="poczatekRezerwacji">
+                    <label th:classappend="${#fields.hasErrors('poczatekRezerwacji')}? 'error'" for="poczatekRezerwacji">Początek rezerwacji</label>
                 </div>
             </div>
             <div class="col-md">
                 <div class="form-floating">
-                    <input type="date" th:field="*{koniecRezerwacji}" class="form-control" id="koniecRezerwacji">
-                    <label for="koniecRezerwacji">Koniec rezerwacji</label>
+                    <input type="date" th:field="*{koniecRezerwacji}" th:classappend="${#fields.hasErrors('koniecRezerwacji')}? 'error'" th:class="form-control" id="koniecRezerwacji">
+                    <label th:classappend="${#fields.hasErrors('koniecRezerwacji')}? 'error'" for="koniecRezerwacji">Koniec rezerwacji</label>
                 </div>
             </div>
             <input type="submit" class="btn btn-primary" value="Zarezerwuj"/>

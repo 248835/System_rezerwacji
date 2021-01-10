@@ -4,13 +4,19 @@ import com.example.rezerwacje.hotel.Hotel;
 import com.example.rezerwacje.hotel.Pokoj;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 public class RezerwacjaForm {
     private Hotel hotel;
     private Pokoj pokoj;
+
+    @NotNull(message = "{data.null}")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date poczatekRezerwacji;
+
+    @NotNull(message = "{data.null}")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date koniecRezerwacji;
 

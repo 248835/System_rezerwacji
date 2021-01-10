@@ -2,11 +2,23 @@ package com.example.rezerwacje.web.forms;
 
 import com.example.rezerwacje.uzytkownik.Uzytkownik;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 public class UzytkownikForm {
+    @Size(min=2, max=20, message="{nazwa.size}")
     private String nazwa;
+
+    @Size(min=5, max=20, message="{haslo.size}")
     private String haslo;
+
+    @Size(min=2, max=20, message="{imie.size}")
     private String imie;
+
+    @Size(min=2, max=20, message="{nazwisko.size}")
     private String nazwisko;
+
+    @NotBlank(message = "{rola.blank}")
     private String rola;
 
     public String getNazwa() {

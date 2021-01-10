@@ -12,14 +12,17 @@ import com.example.rezerwacje.web.forms.MiastoForm;
 import com.example.rezerwacje.web.forms.RezerwacjaForm;
 import com.example.rezerwacje.web.forms.UzytkownikForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -51,11 +54,18 @@ public class HomeKontroler {
     }
 
     // POST - kiedy zmieniasz cos na serwerze
-    // ta metoda jest do dupy i się nią nie wzoruj, w najbliższym czasie ją zmienię. Poprawna tego typu metoda to rejestracja()
     @RequestMapping(method = POST)
     public String processHome(
-            RedirectAttributes redirectAttributes,
-            MiastoForm miastoForm) {
+            RedirectAttributes redirectAttributes, @Valid MiastoForm miastoForm, BindingResult errors) {
+        if (errors.hasErrors()) {
+            return "home";
+        }
+        if (hotelRepository.znajdzHoteleMiasto(miastoForm.getMiasto()).isEmpty()){
+            errors.rejectValue("miasto","user.error","Nie ma tekiego miasta w bazie");
+        }
+        if (errors.hasErrors()) {
+            return "home";
+        }
 
         redirectAttributes.addAttribute("miasto", miastoForm.getMiasto());
 
@@ -100,12 +110,43 @@ public class HomeKontroler {
     //todo sprawdzanie dat
     @RequestMapping(value = "/{miasto}/{nazwa}/{id}", method = POST)
     public String rezerwacja(@PathVariable String miasto, @PathVariable String nazwa, @PathVariable int id,
-                             RedirectAttributes redirectAttributes, RezerwacjaForm rezerwacjaForm) {
-        rezerwacjaForm.setHotel(hotelRepository.znajdzHotel(miasto, nazwa));
-        rezerwacjaForm.setPokoj(pokojRepository.znajdzPokoj(id));
+                             RedirectAttributes redirectAttributes, @Valid RezerwacjaForm rezerwacjaForm,
+                             BindingResult errors, Model model) {
+        Hotel hotel = hotelRepository.znajdzHotel(miasto, nazwa);
+        Pokoj pokoj = pokojRepository.znajdzPokoj(id);
+        rezerwacjaForm.setHotel(hotel);
+        rezerwacjaForm.setPokoj(pokoj);
+
+        if (errors.hasErrors()) {
+            model.addAttribute("hotel", hotel);
+            model.addAttribute("pokoj", pokoj);
+            List<String> rezerwacje = new ArrayList<>();
+            for (Date[] daty : rezerwacjaRepository.znajdzTerminyRezerwacji(pokoj)) {
+                rezerwacje.add("Od " + daty[0] + " do " + daty[1]);
+            }
+            model.addAttribute("rezerwacje", rezerwacje);
+            return "pokoj";
+        }
+
         Rezerwacja rezerwacja = new Rezerwacja(rezerwacjaForm, getUzytkownik());
-        System.out.println(rezerwacja.getUzytkownik().getNazwa());
-        rezerwacjaRepository.dodajRezerwacje(rezerwacja);
+        try {
+            rezerwacjaRepository.dodajRezerwacje(rezerwacja);
+        }catch (DataIntegrityViolationException e){
+            //todo sprawdzić na postgres
+            errors.rejectValue("poczatekRezerwacji","error.user","Wprowadzono daty w złęj kolejności lub wybrano zajęty termin");
+            errors.rejectValue("koniecRezerwacji","error.user","");
+        }
+        if (errors.hasErrors()) {
+            model.addAttribute("hotel", hotel);
+            model.addAttribute("pokoj", pokoj);
+            List<String> rezerwacje = new ArrayList<>();
+            for (Date[] daty : rezerwacjaRepository.znajdzTerminyRezerwacji(pokoj)) {
+                rezerwacje.add("Od " + daty[0] + " do " + daty[1]);
+            }
+            model.addAttribute("rezerwacje", rezerwacje);
+            return "pokoj";
+        }
+
         rezerwacja.setId(rezerwacjaRepository.znajdzIdRezerwacji(rezerwacja));
 
         redirectAttributes.addAttribute("rezerwacjaId", rezerwacja.getId());
@@ -139,8 +180,11 @@ public class HomeKontroler {
 
     //todo bezpieczenstwo
     @RequestMapping(value = "/register", method = POST)
-    public String rejestracja(UzytkownikForm uzytkownikForm){
-        System.out.println(uzytkownikForm);
+    public String rejestracja(@Valid UzytkownikForm uzytkownikForm, BindingResult errors){
+        if (errors.hasErrors()) {
+            return "register";
+        }
+
         uzytkownikRepository.addUzytkownik(uzytkownikForm.toUzytkownik());
 
         return "redirect:/login";
