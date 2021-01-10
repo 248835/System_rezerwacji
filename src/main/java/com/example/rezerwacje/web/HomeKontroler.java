@@ -10,6 +10,7 @@ import com.example.rezerwacje.rezerwacja.Rezerwacja;
 import com.example.rezerwacje.uzytkownik.Uzytkownik;
 import com.example.rezerwacje.web.forms.MiastoForm;
 import com.example.rezerwacje.web.forms.RezerwacjaForm;
+import com.example.rezerwacje.web.forms.UzytkownikForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,7 +29,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @Controller
 @RequestMapping("/")
 public class HomeKontroler {
-
+    //tak dodajesz repozytoria do kontrolera
     private final HotelRepository hotelRepository;
     private final PokojRepository pokojRepository;
     private final RezerwacjaRepository rezerwacjaRepository;
@@ -43,13 +44,14 @@ public class HomeKontroler {
     }
 
     // GET - kiedy nie zmieniasz nic na serwerze
-    // POST - kiedy zmieniasz cos na serwerze
     @RequestMapping(method = GET)
     public String home(Model model) {
         model.addAttribute(new MiastoForm());
         return "home";
     }
 
+    // POST - kiedy zmieniasz cos na serwerze
+    // ta metoda jest do dupy i się nią nie wzoruj, w najbliższym czasie ją zmienię. Poprawna tego typu metoda to rejestracja()
     @RequestMapping(method = POST)
     public String processHome(
             RedirectAttributes redirectAttributes,
@@ -65,7 +67,7 @@ public class HomeKontroler {
             @PathVariable String miasto,
             Model model) {
 
-        model.addAttribute("hotelList", hotelRepository.znajdzHotele(miasto));
+        model.addAttribute("hotelList", hotelRepository.znajdzHoteleMiasto(miasto));
 
         return "hotele";
     }
@@ -78,6 +80,7 @@ public class HomeKontroler {
         return "hotel";
     }
 
+    //todo ogarnąć rozdrobnienie rezerwacji w ciągłe przedziały
     @RequestMapping(value = "/{miasto}/{nazwa}/{id}", method = GET)
     public String pokoj(@PathVariable String miasto, @PathVariable String nazwa, @PathVariable int id, Model model) {
         Hotel hotel = hotelRepository.znajdzHotel(miasto, nazwa);
@@ -94,6 +97,7 @@ public class HomeKontroler {
         return "pokoj";
     }
 
+    //todo sprawdzanie dat
     @RequestMapping(value = "/{miasto}/{nazwa}/{id}", method = POST)
     public String rezerwacja(@PathVariable String miasto, @PathVariable String nazwa, @PathVariable int id,
                              RedirectAttributes redirectAttributes, RezerwacjaForm rezerwacjaForm) {
@@ -125,6 +129,21 @@ public class HomeKontroler {
         model.addAttribute("cena",diff * rezerwacja.getPokoj().getCena());
 
         return "rezerwacja";
+    }
+
+    @RequestMapping(value = "/register", method = GET)
+    public String rejestracja(Model model){
+        model.addAttribute(new UzytkownikForm());
+        return "register";
+    }
+
+    //todo bezpieczenstwo
+    @RequestMapping(value = "/register", method = POST)
+    public String rejestracja(UzytkownikForm uzytkownikForm){
+        System.out.println(uzytkownikForm);
+        uzytkownikRepository.addUzytkownik(uzytkownikForm.toUzytkownik());
+
+        return "redirect:/login";
     }
 
     private Uzytkownik getUzytkownik(){

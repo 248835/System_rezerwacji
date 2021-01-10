@@ -3,15 +3,19 @@ package com.example.rezerwacje.data;
 import com.example.rezerwacje.uzytkownik.Uzytkownik;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
 @Repository
 public class JdbcUzytkownikRepository implements UzytkownikRepository{
-    private static final String ZNAJDZ_UZYTKOWNIKA = "select * from uzytkownicy where nazwa = ?";
+    private static final String SELECT_FROM_UZYTKOWNICY_WHERE = "select * from uzytkownicy where ";
+    private static final String SELECT_FROM_UZYTKOWNICY_WHERE_NAZWA = SELECT_FROM_UZYTKOWNICY_WHERE + "nazwa = ?";
+    private static final String INSERT_UZYTKOWNIK = "INSERT INTO UZYTKOWNICY(NAZWA, HASLO, IMIE, NAZWISKO, ROLA, NAZWA_KIEROWNIKA)\n" +
+            "VALUES(?,?,?,?,?,?)";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -22,42 +26,19 @@ public class JdbcUzytkownikRepository implements UzytkownikRepository{
 
     @Override
     public Uzytkownik znajdzUzytkownika(String nazwa) {
-        return jdbcTemplate.queryForObject(ZNAJDZ_UZYTKOWNIKA,this::mapRow,nazwa);
-    }
-
-    @Override
-    public List<Uzytkownik> znajdzPracownikow(Uzytkownik id) {
-        return null;
+        return jdbcTemplate.queryForObject(SELECT_FROM_UZYTKOWNICY_WHERE_NAZWA,this::mapRow,nazwa);
     }
 
     @Override
     public void addUzytkownik(Uzytkownik uzytkownik) {
-
-    }
-
-    @Override
-    public void addPracownik(Uzytkownik pracownik, Uzytkownik kierownik) {
-
-    }
-
-    @Override
-    public void usunUzytkownika(Uzytkownik uzytkownik) {
-
-    }
-
-    @Override
-    public void usunPracownika(Uzytkownik pracownik, Uzytkownik kierownik) {
-
-    }
-
-    @Override
-    public void modyfikujUzytkownik(Uzytkownik uzytkownik) {
-
-    }
-
-    @Override
-    public void modyfikujPracownik(Uzytkownik pracownik, Uzytkownik kierownik) {
-
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        jdbcTemplate.update(INSERT_UZYTKOWNIK,
+                uzytkownik.getNazwa(),
+                encoder.encode(uzytkownik.getHaslo()),
+                uzytkownik.getImie(),
+                uzytkownik.getNazwisko(),
+                uzytkownik.getRola(),
+                uzytkownik.getNazwaKierownika());
     }
 
     private Uzytkownik mapRow(ResultSet resultSet, int i) throws SQLException {

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+    <title>Rejestracja</title>
+</head>
+<body>
+<div id="header" th:include="page :: header"></div>
+<h1 class="text-center">Rejestracja</h1>
+<h4 class="text-center">Wypełnij poniższy formularz</h4>
+<form method="POST" th:object="${uzytkownikForm}" th:action="@{/register}">
+    <div class="container">
+        <div class="row g-2">
+            <div class="col-md">
+                <div class="form-floating">
+                    <input type="text" th:field="*{imie}" class="form-control" id="floatingInputGrid1">
+                    <label for="floatingInputGrid1">Imie</label>
+                </div>
+            </div>
+            <div class="col-md">
+                <div class="form-floating">
+                    <input type="text" th:field="*{nazwisko}" class="form-control" id="floatingInputGrid2">
+                    <label for="floatingInputGrid2">Nazwisko</label>
+                </div>
+            </div>
+        </div>
+        <div class="row g-2">
+            <div class="col-md">
+                <div class="form-floating">
+                    <input type="text" th:field="*{nazwa}" class="form-control" id="floatingInputGrid3">
+                    <label for="floatingInputGrid3">Nazwa użytkownika</label>
+                </div>
+            </div>
+            <div class="col-md">
+                <div class="form-floating">
+                    <select class="form-select" th:field="*{rola}" id="floatingSelectGrid" aria-label="Floating label select example">
+                        <option value="" selected></option>
+                        <option value="1">Klient</option>
+                        <option value="2">Kierownik</option>
+                    </select>
+                    <label for="floatingSelectGrid">Typ konta</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-floating">
+            <input type="password" th:field="*{haslo}" class="form-control" id="floatingPassword1">
+            <label for="floatingPassword1">Hasło</label>
+        </div>
+        <input type="submit" class="btn btn-primary" value="Wyślij" />
+    </div>
+</form>
+</body>
+</html>

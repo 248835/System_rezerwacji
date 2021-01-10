@@ -65,4 +65,15 @@ public class Pokoj {
     public void setCena(int cena) {
         this.cena = cena;
     }
+
+    @Override
+    public String toString() {
+        return "Pokoj{" +
+                "id=" + id +
+                ", numer=" + numer +
+                ", rodzaj=" + rodzaj +
+                ", rozmiar=" + rozmiar +
+                ", cena=" + cena +
+                '}';
+    }
 }

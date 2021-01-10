@@ -8,14 +8,15 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class JdbcPokojRepository implements PokojRepository{
-    private static final String SELECT_FROM_POKOJE_WHERE_ID_HOTELU = "select * from pokoje where id_hotelu = ?";
-    private static final String SELECT_FROM_POKOJE_WHERE_ID = "select * from pokoje where id = ?";
+    private static final String SELECT_FROM_POKOJE_WHERE = "select * from pokoje where ";
+    private static final String SELECT_FROM_POKOJE_WHERE_ID_HOTELU = SELECT_FROM_POKOJE_WHERE + "id_hotelu = ?";
+    private static final String SELECT_FROM_POKOJE_WHERE_ID = SELECT_FROM_POKOJE_WHERE + "id = ?";
+    private static final String SELECT_FROM_POKOJE_WHERE_ID_HOTELU_FROM_HOTELE =
+            "select * from pokoje where id_hotelu = (select id from hotele where nazwa_kierownika = ?)";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -30,28 +31,13 @@ public class JdbcPokojRepository implements PokojRepository{
     }
 
     @Override
+    public List<Pokoj> znajdzPokojeNazwaKierownika(String nazwaKierownika) {
+        return jdbcTemplate.query(SELECT_FROM_POKOJE_WHERE_ID_HOTELU_FROM_HOTELE, this::mapRow,nazwaKierownika);
+    }
+
+    @Override
     public Pokoj znajdzPokoj(int id) {
         return jdbcTemplate.queryForObject(SELECT_FROM_POKOJE_WHERE_ID,this::mapRow,id);
-    }
-
-    @Override
-    public Map<Hotel, List<Pokoj>> znajdzOferty(String adres, Date poczatek, Date koniec) {
-        return null;
-    }
-
-    @Override
-    public void dodajPokoj(Pokoj pokoj, Hotel hotel) {
-
-    }
-
-    @Override
-    public void usunPokoj(Pokoj pokoj) {
-
-    }
-
-    @Override
-    public void modyfikujPokoj(Pokoj pokoj) {
-
     }
 
     private Pokoj mapRow(ResultSet resultSet, int rowNum) throws SQLException {

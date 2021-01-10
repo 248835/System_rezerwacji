@@ -11,6 +11,7 @@
     <title>System Rezerwacji</title>
 </head>
 <body>
+<div id="header" th:include="page :: header"></div>
 <h1 class="text-center">Witaj w aplikacji do rezerwacji!</h1>
 <form method="POST" th:object="${miastoForm}" th:action="@{/}">
     <h4 class="text-center">Wyszukaj hotele</h4>

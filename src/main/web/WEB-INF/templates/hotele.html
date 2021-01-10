@@ -14,20 +14,21 @@
     <title>Hotele</title>
 </head>
 <body>
+<div id="header" th:include="page :: header"></div>
 <div class="listTitle">
-    <h1>Hotele w danym mieście</h1>
+    <h1 class="text-center">Hotele w danym mieście</h1>
 
-    <div class="list-group">
-        <li th:each="hotel : ${hotelList}">
+    <div class="container list-group">
+        <div th:each="hotel : ${hotelList}">
             <a th:href="@{'/' + ${miasto} + '/' + ${hotel.nazwa}}" class="list-group-item list-group-item-action">
                 <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1">Hotel <span th:text="${hotel.nazwa}"/></h5>
                     <small class="text-muted">Ocena: <span th:text="${hotel.ocena}"/></small>
                 </div>
-                <p class="mb-1">Opis, który może to ogarnę, a może nie ogarnę ¯\_(ツ)_/¯</p>
+                <p class="mb-1">Opis, który może się ogarnie, a może się nie ogarnie ¯\_(ツ)_/¯</p>
                 <small class="text-muted">Adres: <span th:text="${miasto} + ' ' + ${hotel.ulica}"/></small>
             </a>
-        </li>
+        </div>
     </div>
 </div>
 </body>

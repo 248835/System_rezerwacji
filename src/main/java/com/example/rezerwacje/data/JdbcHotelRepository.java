@@ -12,8 +12,10 @@ import java.util.List;
 
 @Repository
 public class JdbcHotelRepository implements HotelRepository {
-    private static final String ZNAJDZ_MIASTO = "select * from hotele where miasto = ?";
-    private static final String ZNAJDZ_MIASTO_NAZWA = ZNAJDZ_MIASTO + "AND nazwa = ?";
+    private static final String SELECT_FROM_HOTELE_WHERE = "select * from hotele where ";
+    private static final String SELECT_FROM_HOTELE_WHERE_MIASTO = SELECT_FROM_HOTELE_WHERE + "miasto = ?";
+    private static final String SELECT_FROM_HOTELE_WHERE_MIASTO_AND_NAZWA = SELECT_FROM_HOTELE_WHERE_MIASTO + "AND nazwa = ?";
+    private static final String SELECT_FROM_HOTELE_WHERE_NAZWA_KIEROWNIKA = SELECT_FROM_HOTELE_WHERE + "nazwa_kierownika = ?";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -23,38 +25,18 @@ public class JdbcHotelRepository implements HotelRepository {
     }
 
     @Override
-    public List<Hotel> znajdzHotele(Uzytkownik uzytkownik) {
-        return null;
+    public Hotel znajdzHotelKierownik(String nazwaKierownika) {
+        return jdbcTemplate.queryForObject(SELECT_FROM_HOTELE_WHERE_NAZWA_KIEROWNIKA, this::mapRow,nazwaKierownika);
     }
 
     @Override
-    public List<Hotel> znajdzHotele(String miasto) {
-        return jdbcTemplate.query(ZNAJDZ_MIASTO, this::mapRow,miasto);
-    }
-
-    @Override
-    public Hotel znajdzHotelPracownika(Uzytkownik pracownik) {
-        return null;
+    public List<Hotel> znajdzHoteleMiasto(String miasto) {
+        return jdbcTemplate.query(SELECT_FROM_HOTELE_WHERE_MIASTO, this::mapRow,miasto);
     }
 
     @Override
     public Hotel znajdzHotel(String miasto, String nazwa) {
-        return jdbcTemplate.queryForObject(ZNAJDZ_MIASTO_NAZWA, this::mapRow,miasto,nazwa);
-    }
-
-    @Override
-    public void addHotel(Uzytkownik kierownik, Hotel hotel) {
-
-    }
-
-    @Override
-    public void modyfikujHotel(Hotel hotel) {
-
-    }
-
-    @Override
-    public void usunHotel(Hotel hotel) {
-
+        return jdbcTemplate.queryForObject(SELECT_FROM_HOTELE_WHERE_MIASTO_AND_NAZWA, this::mapRow,miasto,nazwa);
     }
 
     private Hotel mapRow(ResultSet resultSet, int rowNum) throws SQLException{

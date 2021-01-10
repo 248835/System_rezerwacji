@@ -12,44 +12,42 @@
     <title>Pokoj</title>
 </head>
 <body>
+<div id="header" th:include="page :: header"></div>
 <div class="list-group">
     <div class="list-group-item list-group-item-action active" aria-current="true">
         <div class="d-flex w-100 justify-content-between">
-            <h4 class="mb-1"><span th:text="${pokoj.rozmiar}"/>. osobowy pokój <span th:text="${pokoj.rodzaj}"/></h4>
-            <h5 class="mb-1">Hotel <span th:text="${nazwa}"/></h5>
+            <h4 class="mb-1">Hotel <span th:text="${nazwa}"/></h4>
             <small>Cena: <span th:text="${pokoj.cena}"/></small>
         </div>
-        <p class="mb-1">Tu będzie opis jak się go ogarnie</p>
+        <p class="mb-1"><span th:text="${pokoj.rozmiar}"/>. osobowy pokój <span th:text="${pokoj.rodzaj}"/></p>
         <small>Adres: <span th:text="${hotel.miasto} + ' ' + ${hotel.ulica}"/></small>
     </div>
-    <div class="list-group-item list-group-item-action disabled">
-        <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">Rezerwacje</h5>
-        </div>
-    </div>
+    <h4 class="mb-1 text-center">Zajęte terminy</h4>
     <div class="list-group-item list-group-item-action disabled">
         <div th:each="rezerwacja : ${rezerwacje}">
-            <div class="mb-1" th:text="${rezerwacja}"/>
+            <div class="mb-1 text-center" th:text="${rezerwacja}"/>
         </div>
     </div>
 </div>
-<h4 class="text-center">Wybierz termin</h4>
-<form method="POST" th:object="${rezerwacjaForm}" th:action="@{'/' + ${miasto} + '/' + ${nazwa} + '/' + ${pokoj.id}}">
-    <div class="row g-2">
-        <div class="col-md">
-            <div class="form-floating">
-                <input type="date" th:field="*{poczatekRezerwacji}" class="form-control" id="poczatekRezerwacji">
-                <label for="poczatekRezerwacji">Początek rezerwacji</label>
+<div class="container">
+    <h4 class="text-center">Wybierz termin</h4>
+    <form method="POST" th:object="${rezerwacjaForm}" th:action="@{'/' + ${miasto} + '/' + ${nazwa} + '/' + ${pokoj.id}}">
+        <div class="row g-2">
+            <div class="col-md">
+                <div class="form-floating">
+                    <input type="date" th:field="*{poczatekRezerwacji}" class="form-control" id="poczatekRezerwacji">
+                    <label for="poczatekRezerwacji">Początek rezerwacji</label>
+                </div>
             </div>
-        </div>
-        <div class="col-md">
-            <div class="form-floating">
-                <input type="date" th:field="*{koniecRezerwacji}" class="form-control" id="koniecRezerwacji">
-                <label for="koniecRezerwacji">Koniec rezerwacji</label>
+            <div class="col-md">
+                <div class="form-floating">
+                    <input type="date" th:field="*{koniecRezerwacji}" class="form-control" id="koniecRezerwacji">
+                    <label for="koniecRezerwacji">Koniec rezerwacji</label>
+                </div>
             </div>
+            <input type="submit" class="btn btn-primary" value="Zarezerwuj"/>
         </div>
-        <input type="submit" class="btn btn-primary" value="Zarezerwuj"/>
-    </div>
-</form>
+    </form>
+</div>
 </body>
 </html>

@@ -49,18 +49,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 //.loginPage("/login")
                 .and()
-                .logout()//.logoutSuccessUrl("/")//.logoutUrl("/logout")
+                .logout().logoutSuccessUrl("/")//.logoutUrl("/logout")
                 .and()
                 .rememberMe()//.tokenValiditySeconds(2419200)
                 .and()
                 .httpBasic()//.realmName("Spittr")
                 .and()
                 .authorizeRequests()
-                //.antMatchers("/spitter/me","/spittles/mine").authenticated()
                 .antMatchers(/*HttpMethod.POST, */"/{miasto}/{nazwa}/{id}").hasRole("KLIENT") //fixme powinno działać, a nie działa :<
+                .antMatchers("/kierownik").hasRole("KIEROWNIK")
+                .antMatchers("/pracownik").hasRole("PRACOWNIK")
+                .antMatchers("/klient").authenticated()
                 .anyRequest().permitAll().and()
                 .requiresChannel()
-                //.antMatchers("/spitter/form").requiresSecure()
+                //.antMatchers("/register").requiresSecure()    //fixme spring bully :'(
                 .antMatchers("/").requiresInsecure();
     }
 }
