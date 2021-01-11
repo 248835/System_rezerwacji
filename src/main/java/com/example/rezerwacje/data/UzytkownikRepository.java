@@ -12,4 +12,6 @@ public interface UzytkownikRepository{
     void zmienImieNazwisko(ImieNazwiskoForm imieNazwiskoForm, String nazwa);
 
     void zmienHaslo(HasloForm hasloForm, String nazwa);
+
+    void usunKonto(String nazwa);
 }

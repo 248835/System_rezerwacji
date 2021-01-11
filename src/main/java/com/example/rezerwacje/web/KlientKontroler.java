@@ -8,12 +8,16 @@ import com.example.rezerwacje.web.forms.UzytkownikForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Controller
@@ -27,27 +31,27 @@ public class KlientKontroler {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String pokazOferty(Model model){
+    public String pokazOferty(Model model) {
         Uzytkownik uzytkownik = getUzytkownik();
-        if (uzytkownik.getRola().equals("ROLE_PRACOWNIK")){
+        if (uzytkownik.getRola().equals("ROLE_PRACOWNIK")) {
             Uzytkownik kierownik = uzytkownikRepository.znajdzUzytkownika(uzytkownik.getNazwaKierownika());
             String imieNazwiskoKierownika = kierownik.getImie() + ' ' + kierownik.getNazwisko();
-            model.addAttribute("imieNazwiskoKierownika",imieNazwiskoKierownika);
+            model.addAttribute("imieNazwiskoKierownika", imieNazwiskoKierownika);
         }
         model.addAttribute(uzytkownik);
         return "konto";
     }
 
     @RequestMapping(value = "/zmienImieNazwisko", method = RequestMethod.GET)
-    public String zmienImieNazwisko(Model model){
+    public String zmienImieNazwisko(Model model) {
         model.addAttribute(new ImieNazwiskoForm(getUzytkownik()));
 
         return "zmienImieNazwisko";
     }
 
     @RequestMapping(value = "/zmienImieNazwisko", method = RequestMethod.POST)
-    public String zmienImieNazwisko(@Valid ImieNazwiskoForm imieNazwiskoForm, BindingResult errors){
-        if (errors.hasErrors()){
+    public String zmienImieNazwisko(@Valid ImieNazwiskoForm imieNazwiskoForm, BindingResult errors) {
+        if (errors.hasErrors()) {
             return "zmienImieNazwisko";
         }
         uzytkownikRepository.zmienImieNazwisko(imieNazwiskoForm, getUzytkownik().getNazwa());
@@ -55,27 +59,43 @@ public class KlientKontroler {
     }
 
     @RequestMapping(value = "/zmienHaslo", method = RequestMethod.GET)
-    public String zmienHaslo(Model model){
+    public String zmienHaslo(Model model) {
         model.addAttribute(new HasloForm());
 
         return "zmienHaslo";
     }
 
     @RequestMapping(value = "/zmienHaslo", method = RequestMethod.POST)
-    public String zmienHaslo(@Valid HasloForm hasloForm, BindingResult errors){
-        if (errors.hasErrors()){
+    public String zmienHaslo(@Valid HasloForm hasloForm, BindingResult errors) {
+        if (errors.hasErrors()) {
             return "zmienHaslo";
         }
         uzytkownikRepository.zmienHaslo(hasloForm, getUzytkownik().getNazwa());
         return "redirect:/klient";
     }
 
-    private Uzytkownik getUzytkownik(){
+    @RequestMapping(value = "/usunKonto", method = RequestMethod.GET)
+    public String usunKonto(Model model) {
+
+        return "usunKonto";
+    }
+
+    @RequestMapping(value = "/usunKonto", method = RequestMethod.POST)
+    public String usunKonto() {
+        uzytkownikRepository.usunKonto(getUzytkownik().getNazwa());
+        HttpServletRequest request =
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+                        .getRequest();
+        new SecurityContextLogoutHandler().logout(request, null, null);
+        return "redirect:/";
+    }
+
+    private Uzytkownik getUzytkownik() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username;
-        if(principal instanceof UserDetails){
-            username = ((UserDetails)principal).getUsername();
-        }else{
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else {
             username = principal.toString();
         }
 

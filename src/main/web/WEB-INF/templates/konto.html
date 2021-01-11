@@ -33,6 +33,7 @@
     <div class="btn-group" role="group" aria-label="Basic example">
         <a class="btn btn-primary" th:href="@{/klient/zmienImieNazwisko}" role="button">Zmień imię lub nazwisko</a>
         <a class="btn btn-primary" th:href="@{/klient/zmienHaslo}" role="button">Zmień hasło</a>
+        <a class="btn btn-primary" sec:authorize="hasAnyRole('KIEROWNIK','KLIENT')" th:href="@{/klient/usunKonto}" role="button">Usuń konto</a>
     </div>
 </div>
 </body>
