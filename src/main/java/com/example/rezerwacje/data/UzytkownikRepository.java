@@ -14,4 +14,6 @@ public interface UzytkownikRepository{
     void zmienHaslo(HasloForm hasloForm, String nazwa);
 
     void usunKonto(String nazwa);
+    
+	List<Uzytkownik> znajdzPracownika(String nazwaKierwonika);
 }
