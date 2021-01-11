@@ -16,6 +16,7 @@ import java.sql.SQLException;
 public class JdbcUzytkownikRepository implements UzytkownikRepository{
     private static final String SELECT_FROM_UZYTKOWNICY_WHERE = "select * from uzytkownicy where ";
     private static final String SELECT_FROM_UZYTKOWNICY_WHERE_NAZWA = SELECT_FROM_UZYTKOWNICY_WHERE + "nazwa = ?";
+    private static final String SELECT_FROM_UZYTKOWNICY_WHERE_NAZWA_KIEROWNIKA = SELECT_FROM_UZYTKOWNICY_WHERE + "nazwa_kierownika = ?";
     private static final String INSERT_UZYTKOWNIK = "INSERT INTO UZYTKOWNICY(NAZWA, HASLO, IMIE, NAZWISKO, ROLA, NAZWA_KIEROWNIKA)\n" +
             "VALUES(?,?,?,?,?,?)";
     private static final String UPDATE_UZYTKOWNICY_SET_IMIE_NAZWISKO = "update uzytkownicy set imie = ?, nazwisko = ? where nazwa = ?";
@@ -73,6 +74,11 @@ public class JdbcUzytkownikRepository implements UzytkownikRepository{
         jdbcTemplate.update(DELETE_REZERWACJE_WHERE_NAZWA_KLIENTA,nazwa);
         jdbcTemplate.update(DELETE_UZYTKOWNICY_WHERE_NAZWA,nazwa);
     }
+    
+    @Override
+	public List<Uzytkownik> znajdzPracownika(String nazwaKierownika) {
+		return jdbcTemplate.query(SELECT_FROM_UZYTKOWNICY_WHERE_NAZWA_KIEROWNIKA, this::mapRow, nazwaKierownika);
+	}
 
     private Uzytkownik mapRow(ResultSet resultSet, int i) throws SQLException {
         String nazwa = resultSet.getString("nazwa");
