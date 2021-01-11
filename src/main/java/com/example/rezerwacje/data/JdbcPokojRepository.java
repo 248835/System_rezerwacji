@@ -17,7 +17,12 @@ public class JdbcPokojRepository implements PokojRepository{
     private static final String SELECT_FROM_POKOJE_WHERE_ID = SELECT_FROM_POKOJE_WHERE + "id = ?";
     private static final String SELECT_FROM_POKOJE_WHERE_ID_HOTELU_FROM_HOTELE =
             "select * from pokoje where id_hotelu = (select id from hotele where nazwa_kierownika = ?)";
-
+	private static final String INSERT_POKOJ = "INSERT INTO POKOJE(NUMER, RODZAJ, ROZMIAR, CENA, ID_HOTELU)\n" +
+			"VALUES(?,?,?,?,?)";
+	private static final String UPDATE_POKOJ_DANE = "UPDATE POKOJE SET NUMER = ?, RODZAJ = ?, ROZMIAR = ?, CENA = ? WHERE ID = ?";
+	private static final String DELETE_POKOJE_WHERE_ID = "DELETE FROM POKOJE WHERE ID = ?";
+	private static final String DELETE_REZERWACJE_WHERE_POKOJ = "DELETE FROM REZERWACJE WHERE ID_POKOJU = ?";
+    
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -40,6 +45,32 @@ public class JdbcPokojRepository implements PokojRepository{
         return jdbcTemplate.queryForObject(SELECT_FROM_POKOJE_WHERE_ID,this::mapRow,id);
     }
 
+    @Override
+	public void dodajPokoj(Pokoj pokoj, int id_hotelu) {
+		jdbcTemplate.update(INSERT_POKOJ, 
+					pokoj.getNumer(),
+					pokoj.getRodzaj(),
+					pokoj.getRozmiar(),
+					pokoj.getCena(),
+					id_hotelu);
+	}
+	
+	@Override
+	public void zmienDanePokoju(PokojForm pokojDane, int id_pokoju) {
+		jdbcTemplate.update(UPDATE_POKOJ_DANE,
+						pokojDane.getNumer(),
+						pokojDane.getRodzaj(),
+						pokojDane.getRozmiar(),
+						pokojDane.getCena(),
+						id_pokoju);
+	}
+	
+	@Override
+	public void usunPokoj(int id) {
+		jdbcTemplate.update(DELETE_REZERWACJE_WHERE_POKOJ, id);
+		jdbcTemplate.update(DELETE_POKOJE_WHERE_ID, id);
+	}
+    
     private Pokoj mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         int id = resultSet.getInt("id");
         int nr = resultSet.getInt("numer");
