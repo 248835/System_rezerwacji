@@ -16,7 +16,12 @@ public class JdbcHotelRepository implements HotelRepository {
     private static final String SELECT_FROM_HOTELE_WHERE_MIASTO = SELECT_FROM_HOTELE_WHERE + "miasto = ?";
     private static final String SELECT_FROM_HOTELE_WHERE_MIASTO_AND_NAZWA = SELECT_FROM_HOTELE_WHERE_MIASTO + "AND nazwa = ?";
     private static final String SELECT_FROM_HOTELE_WHERE_NAZWA_KIEROWNIKA = SELECT_FROM_HOTELE_WHERE + "nazwa_kierownika = ?";
-
+    private static final String INSERT_HOTEL = "INSERT INTO HOTELE(NAZWA,MIASTO,ULICA,OCENA,NAZWA_KIEROWNIKA)\n" +
+		"VALUES(?,?,?,?,?)";
+	private static final String UPDATE_HOTEL = "UPDATE HOTELE SET NAZWA = ?, MIASTO = ?, ULICA = ?, OCENA = ? WHERE NAZWA_KIEROWNIKA = ?";
+	private static final String DELETE_HOTELE_WHERE_ID = "DELETE FROM HOTELE WHERE ID = ?";
+	private static final String DELETE_POKOJE_WHERE_ID_HOTELU_WHERE_ID = "DELETE FROM POKOJE WHERE ID = ?";
+	
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -39,6 +44,32 @@ public class JdbcHotelRepository implements HotelRepository {
         return jdbcTemplate.queryForObject(SELECT_FROM_HOTELE_WHERE_MIASTO_AND_NAZWA, this::mapRow,miasto,nazwa);
     }
 
+    @Override
+	public void dodajHotel(Hotel hotel, String nazwaKierownika) {
+		jdbcTemplate.update(INSERT_HOTEL,
+					hotel.getNazwa(),
+					hotel.getMiasto(),
+					hotel.getUlica(),
+					hotel.getOcena(),
+					nazwaKierownika);
+	}
+	
+	@Override
+	public void zmienHotel(HotelForm hotelDane, String kierownik) {
+		jdbcTemplate.update(UPDATE_HOTEL,
+						hotelDane.getNumer(),
+						hotelDane.getRodzaj(),
+						hotelDane.getRozmiar(),
+						hotelDane.getCena(),
+						kierownik);
+	}
+	
+	@Override
+	public void usunHotel(Hotel hotel) {
+		jdbcTemplate.update(DELETE_POKOJE_WHERE_ID_HOTELU, hotel.getID());
+		jdbcTemplate.update(DELETE_HOTELE_WHERE_ID, hotel.getID());
+	}
+    
     private Hotel mapRow(ResultSet resultSet, int rowNum) throws SQLException{
         int id = resultSet.getInt("id");
         String nazwa = resultSet.getString("nazwa");
