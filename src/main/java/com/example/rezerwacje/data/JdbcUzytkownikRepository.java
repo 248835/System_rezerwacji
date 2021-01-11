@@ -1,6 +1,8 @@
 package com.example.rezerwacje.data;
 
 import com.example.rezerwacje.uzytkownik.Uzytkownik;
+import com.example.rezerwacje.web.forms.HasloForm;
+import com.example.rezerwacje.web.forms.ImieNazwiskoForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,6 +18,8 @@ public class JdbcUzytkownikRepository implements UzytkownikRepository{
     private static final String SELECT_FROM_UZYTKOWNICY_WHERE_NAZWA = SELECT_FROM_UZYTKOWNICY_WHERE + "nazwa = ?";
     private static final String INSERT_UZYTKOWNIK = "INSERT INTO UZYTKOWNICY(NAZWA, HASLO, IMIE, NAZWISKO, ROLA, NAZWA_KIEROWNIKA)\n" +
             "VALUES(?,?,?,?,?,?)";
+    private static final String UPDATE_UZYTKOWNICY_SET_IMIE_NAZWISKO = "update uzytkownicy set imie = ?, nazwisko = ? where nazwa = ?";
+    private static final String UPDATE_UZYTKOWNICY_SET_HASLO = "update uzytkownicy set haslo = ? where nazwa = ?";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -39,6 +43,22 @@ public class JdbcUzytkownikRepository implements UzytkownikRepository{
                 uzytkownik.getNazwisko(),
                 uzytkownik.getRola(),
                 uzytkownik.getNazwaKierownika());
+    }
+
+    @Override
+    public void zmienImieNazwisko(ImieNazwiskoForm imieNazwiskoForm, String nazwa) {
+        jdbcTemplate.update(UPDATE_UZYTKOWNICY_SET_IMIE_NAZWISKO,
+                imieNazwiskoForm.getImie(),
+                imieNazwiskoForm.getNazwisko(),
+                nazwa);
+    }
+
+    @Override
+    public void zmienHaslo(HasloForm hasloForm, String nazwa) {
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        jdbcTemplate.update(UPDATE_UZYTKOWNICY_SET_HASLO,
+                encoder.encode(hasloForm.getHaslo()),
+                nazwa);
     }
 
     private Uzytkownik mapRow(ResultSet resultSet, int i) throws SQLException {
