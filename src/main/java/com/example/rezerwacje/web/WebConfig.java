@@ -21,64 +21,68 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
 //@Configuration
-@EnableWebMvc // wlacza spring mvc
+//@EnableWebMvc // wlacza spring mvc
 //@ComponentScan("com.example.rezerwacje.web") // skan komponentow
 public class WebConfig implements WebMvcConfigurer {
-    private ApplicationContext applicationContext;
-
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
-    }
-
-    @Override
-    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-        configurer.enable();
-    }
-
     @Bean
-    public ViewResolver viewResolver() {
-        ThymeleafViewResolver resolver = new ThymeleafViewResolver();
-        resolver.setTemplateEngine((ISpringTemplateEngine) templateEngine(templateResolver()));
-        resolver.setCharacterEncoding("UTF-8");
-        return resolver;
+    public SpringSecurityDialect springSecurityDialect(){
+        return new SpringSecurityDialect();
     }
-
-//    @Bean
-//    public TemplateEngine templateEngine() {
-//        SpringTemplateEngine engine = new SpringTemplateEngine();
-//        engine.setEnableSpringELCompiler(true);
-//        engine.setTemplateResolver(templateResolver());
-//        return engine;
+//    private ApplicationContext applicationContext;
+//
+//    public void setApplicationContext(ApplicationContext applicationContext) {
+//        this.applicationContext = applicationContext;
 //    }
-
-    @Bean
-    public ITemplateResolver templateResolver() {
-        SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
-        resolver.setApplicationContext(applicationContext);
-        resolver.setPrefix("/WEB-INF/templates/");
-        resolver.setSuffix(".html");
-        resolver.setTemplateMode(TemplateMode.HTML);
-        return resolver;
-    }
-
-//    @Bean
-//    public StandardServletMultipartResolver multipartResolver() {
-//        return new StandardServletMultipartResolver();
-//    }
-
-    @Bean
-    public SpringTemplateEngine templateEngine(ITemplateResolver templateResolver) {
-        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-        templateEngine.setTemplateResolver(templateResolver);
-        templateEngine.addDialect(new SpringSecurityDialect());
-        return templateEngine;
-    }
-
-    // najwyrazniej bylo potrzebne
+//
 //    @Override
-//    public void addViewControllers(ViewControllerRegistry registry) {
-//        registry.addViewController("/login").setViewName("login");
-//        registry.addViewController("/logout").setViewName("logout");
-//        registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
+//    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+//        configurer.enable();
 //    }
+//
+//    @Bean
+//    public ViewResolver viewResolver() {
+//        ThymeleafViewResolver resolver = new ThymeleafViewResolver();
+//        resolver.setTemplateEngine((ISpringTemplateEngine) templateEngine(templateResolver()));
+//        resolver.setCharacterEncoding("UTF-8");
+//        return resolver;
+//    }
+//
+////    @Bean
+////    public TemplateEngine templateEngine() {
+////        SpringTemplateEngine engine = new SpringTemplateEngine();
+////        engine.setEnableSpringELCompiler(true);
+////        engine.setTemplateResolver(templateResolver());
+////        return engine;
+////    }
+//
+//    @Bean
+//    public ITemplateResolver templateResolver() {
+//        SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
+//        resolver.setApplicationContext(applicationContext);
+//        resolver.setPrefix("/WEB-INF/templates/");
+//        resolver.setSuffix(".html");
+//        resolver.setTemplateMode(TemplateMode.HTML);
+//        return resolver;
+//    }
+//
+////    @Bean
+////    public StandardServletMultipartResolver multipartResolver() {
+////        return new StandardServletMultipartResolver();
+////    }
+//
+//    @Bean
+//    public SpringTemplateEngine templateEngine(ITemplateResolver templateResolver) {
+//        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+//        templateEngine.setTemplateResolver(templateResolver);
+//        templateEngine.addDialect(new SpringSecurityDialect());
+//        return templateEngine;
+//    }
+//
+//    // najwyrazniej bylo potrzebne
+////    @Override
+////    public void addViewControllers(ViewControllerRegistry registry) {
+////        registry.addViewController("/login").setViewName("login");
+////        registry.addViewController("/logout").setViewName("logout");
+////        registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
+////    }
 }
