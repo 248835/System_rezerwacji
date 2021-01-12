@@ -20,9 +20,9 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
-@Configuration
+//@Configuration
 @EnableWebMvc // wlacza spring mvc
-@ComponentScan("com.example.rezerwacje.web") // skan komponentow
+//@ComponentScan("com.example.rezerwacje.web") // skan komponentow
 public class WebConfig implements WebMvcConfigurer {
     private ApplicationContext applicationContext;
 
