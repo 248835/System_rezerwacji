@@ -38,18 +38,18 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public ViewResolver viewResolver() {
         ThymeleafViewResolver resolver = new ThymeleafViewResolver();
-        resolver.setTemplateEngine((ISpringTemplateEngine) templateEngine());
+        resolver.setTemplateEngine((ISpringTemplateEngine) templateEngine(templateResolver()));
         resolver.setCharacterEncoding("UTF-8");
         return resolver;
     }
 
-    @Bean
-    public TemplateEngine templateEngine() {
-        SpringTemplateEngine engine = new SpringTemplateEngine();
-        engine.setEnableSpringELCompiler(true);
-        engine.setTemplateResolver(templateResolver());
-        return engine;
-    }
+//    @Bean
+//    public TemplateEngine templateEngine() {
+//        SpringTemplateEngine engine = new SpringTemplateEngine();
+//        engine.setEnableSpringELCompiler(true);
+//        engine.setTemplateResolver(templateResolver());
+//        return engine;
+//    }
 
     @Bean
     public ITemplateResolver templateResolver() {
@@ -66,13 +66,13 @@ public class WebConfig implements WebMvcConfigurer {
 //        return new StandardServletMultipartResolver();
 //    }
 
-//    @Bean
-//    public SpringTemplateEngine templateEngine(ITemplateResolver templateResolver) {
-//        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-//        templateEngine.setTemplateResolver(templateResolver);
-//        templateEngine.addDialect(new SpringSecurityDialect());
-//        return templateEngine;
-//    }
+    @Bean
+    public SpringTemplateEngine templateEngine(ITemplateResolver templateResolver) {
+        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+        templateEngine.setTemplateResolver(templateResolver);
+        templateEngine.addDialect(new SpringSecurityDialect());
+        return templateEngine;
+    }
 
     // najwyrazniej bylo potrzebne
 //    @Override
