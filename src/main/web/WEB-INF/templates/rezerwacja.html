@@ -6,17 +6,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 
-    <title>Rezerwacja</title>
+    <title>Pokoj</title>
 </head>
+<style>
+    span.error {
+        color: red;
+    }
+
+    div.errors {
+        background-color: #ffcccc;
+        border: 2px solid red;
+    }
+
+    label.error {
+        color: red;
+    }
+
+    input.error {
+        background-color: #ffcccc;
+    }
+</style>
 <body>
 <div id="header" th:include="page :: header"></div>
-<ul class="list-group">
-    <li class="list-group-item active" aria-current="true"><h2>Rezerwacja</h2></li>
-    <li class="list-group-item"><span th:text="${rezerwacja.pokoj.rozmiar}"/>. osobowy pokój w hotelu <span th:text="${rezerwacja.hotel.nazwa}"/></li>
-    <li class="list-group-item">Termin rezerwacji: <span th:text="${rezerwacja.poczatekRezerwacji}"/> do <span th:text="${rezerwacja.koniecRezerwacji}"/></li>
-    <li class="list-group-item">Cena za pobyt: <span th:text="${cena}"/></li>
-</ul>
+<div class="list-group container">
+    <div class="list-group-item list-group-item-action active" aria-current="true">
+        <div class="d-flex w-100 justify-content-between">
+            <h4 class="mb-1">Hotel <span th:text="${nazwa}"/></h4>
+            <small>Cena: <span th:text="${pokoj.cena}"/></small>
+        </div>
+        <p class="mb-1"><span th:text="${pokoj.rozmiar}"/>. osobowy pokój <span th:text="${pokoj.rodzaj}"/></p>
+        <small>Adres: <span th:text="${hotel.miasto} + ' ' + ${hotel.ulica}"/></small>
+    </div>
+    <h4 class="mb-1 text-center">Zajęte terminy</h4>
+    <div class="list-group-item list-group-item-action disabled">
+        <div th:each="rezerwacja : ${rezerwacje}">
+            <div class="mb-1 text-center" th:text="${rezerwacja}"/>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <h4 class="text-center">Wybierz termin</h4>
+    <form method="POST" th:object="${rezerwacjaForm}" th:action="@{'/rezerwacja/' + ${miasto} + '/' + ${nazwa} + '/' + ${pokoj.id}}">
+        <div class="errors" th:if="${#fields.hasErrors('*')}">
+            <div class="list-group">
+                <div class="list-group-item active" aria-current="true">Wprowadzone dane zawierają błędy</div>
+                <div th:each="err : ${#fields.errors('*')}"
+                     th:text="${err}">Wprowadzone dane zawierają błędy</div>
+            </div>
+        </div>
+        <div class="row g-2">
+            <div class="col-md">
+                <div class="form-floating">
+                    <input type="date" th:field="*{poczatekRezerwacji}" th:classappend="${#fields.hasErrors('poczatekRezerwacji')}? 'error'" th:class="form-control" id="poczatekRezerwacji">
+                    <label th:classappend="${#fields.hasErrors('poczatekRezerwacji')}? 'error'" for="poczatekRezerwacji">Początek rezerwacji</label>
+                </div>
+            </div>
+            <div class="col-md">
+                <div class="form-floating">
+                    <input type="date" th:field="*{koniecRezerwacji}" th:classappend="${#fields.hasErrors('koniecRezerwacji')}? 'error'" th:class="form-control" id="koniecRezerwacji">
+                    <label th:classappend="${#fields.hasErrors('koniecRezerwacji')}? 'error'" for="koniecRezerwacji">Koniec rezerwacji</label>
+                </div>
+            </div>
+            <input type="submit" class="btn btn-primary" value="Zarezerwuj"/>
+        </div>
+    </form>
+</div>
 </body>
 </html>

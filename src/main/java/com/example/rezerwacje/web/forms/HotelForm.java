@@ -2,6 +2,7 @@ package com.example.rezerwacje.web.forms;
 
 import com.example.rezerwacje.hotel.Hotel;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
 public class HotelForm {
@@ -13,7 +14,8 @@ public class HotelForm {
 	
 	@Size(min=2, max=60, message="{ulica.size}")
 	private String ulica;
-	
+
+	@Min(value = 0, message = "{pokoj.size}")
 	private int ocena;
 
     public HotelForm(Hotel hotel){

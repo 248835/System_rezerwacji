@@ -67,8 +67,8 @@
                 <div class="form-floating">
                     <select class="form-select" th:field="*{rola}" th:classappend="${#fields.hasErrors('rola')}? 'error'" id="floatingSelectGrid" aria-label="Floating label select example">
                         <option value="" selected></option>
-                        <option value="1">Klient</option>
-                        <option value="2">Kierownik</option>
+                        <option value="ROLE_KLIENT">Klient</option>
+                        <option value="ROLE_KIEROWNIK">Kierownik</option>
                     </select>
                     <label for="floatingSelectGrid" th:class="${#fields.hasErrors('rola')}? 'error'">Typ konta</label>
                 </div>

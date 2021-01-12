@@ -76,4 +76,16 @@ public class Uzytkownik {
     public void setNazwaKierownika(String nazwaKierownika) {
         this.nazwaKierownika = nazwaKierownika;
     }
+
+    @Override
+    public String toString() {
+        return "Uzytkownik{" +
+                "nazwa='" + nazwa + '\'' +
+                ", haslo='" + haslo + '\'' +
+                ", imie='" + imie + '\'' +
+                ", nazwisko='" + nazwisko + '\'' +
+                ", rola='" + rola + '\'' +
+                ", nazwaKierownika='" + nazwaKierownika + '\'' +
+                '}';
+    }
 }

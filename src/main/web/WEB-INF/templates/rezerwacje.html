@@ -13,37 +13,27 @@
 </head>
 <body>
 <div id="header" th:include="page :: header"></div>
-<div class="container list-group">
-    <div class="list-group-item list-group-item-action active" aria-current="true">
-        <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">Hotel <span th:text="${hotel.nazwa}"/></h5>
-            <small>Ocena: <span th:text="${hotel.ocena}"/></small>
-        </div>
-        <small>Adres: <span th:text="${hotel.miasto} + ' ' + ${hotel.ulica}"/></small>
-    </div>
-</div>
-<div class="container">
-    <div class="row">
-        <div class="col-md">
-            <div th:each="pokoj : ${pokoje}">
-                <div class="list-group-item list-group-item-action disabled">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1"><span th:text="${pokoj.rozmiar}"/>. osobowy pokój <span th:text="${pokoj.rodzaj}"/></h5>
-                        <small class="text-muted">Cena: <span th:text="${pokoj.cena}"/></small>
-                    </div>
-                    <p class="mb-1">Tu może być opis</p>
+<div class="listTitle">
+    <h1 class="text-center">Założone rezerwacje</h1>
+
+    <div class="container list-group">
+        <div th:each="rezerwacja : ${rezerwacjaList}">
+            <div class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1"><span
+                            th:text="${rezerwacja.pokoj.rozmiar} + '. osobowy pokój w hotelu ' + ${rezerwacja.hotel.nazwa}"></span>
+                    </h5>
+                    <small class="text-muted">Ocena: <span th:text="${rezerwacja.hotel.ocena}"></span></small>
                 </div>
-            </div>
-        </div>
-        <div class="col-md">
-            <div th:each="rezerwacja : ${rezerwacje}">
-                <a th:href="@{'/pracownik/' + ${rezerwacja.id}}" class="list-group-item list-group-item-action">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">Rodzaj pokoju: <span th:text="${rezerwacja.pokoj.rodzaj}"/></h5>
-                    </div>
-                    <p class="mb-1">Rezerwujący: <span th:text="${rezerwacja.uzytkownik.imie} + ' ' + ${rezerwacja.uzytkownik.nazwisko}"/></p>
-                    <small>Termin rezerwacji: <span th:text="${rezerwacja.poczatekRezerwacji} + ' do ' + ${rezerwacja.koniecRezerwacji}"/></small>
-                </a>
+                <p class="mb-1"><span
+                        th:text="'Termin rezerwacji: ' + ${rezerwacja.poczatekRezerwacji} + ' do ' + ${rezerwacja.koniecRezerwacji}"></span>
+                </p>
+                <small class="text-muted"><span
+                        th:text="'Adres: ' + ${rezerwacja.hotel.miasto} + ' ' + ${rezerwacja.hotel.ulica}">
+                </span></small><br>
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a class="btn btn-danger" th:href="@{'/rezerwacje/usunRezerwacje/' + ${rezerwacja.id}}" role="button">Odwołaj rezerwację</a>
+                </div>
             </div>
         </div>
     </div>

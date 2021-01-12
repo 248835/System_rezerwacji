@@ -65,4 +65,15 @@ public class Hotel {
     public void setId(int id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "Hotel{" +
+                "nazwa='" + nazwa + '\'' +
+                ", miasto='" + miasto + '\'' +
+                ", ulica='" + ulica + '\'' +
+                ", ocena=" + ocena +
+                ", id=" + id +
+                '}';
+    }
 }

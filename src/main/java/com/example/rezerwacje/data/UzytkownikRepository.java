@@ -3,6 +3,7 @@ package com.example.rezerwacje.data;
 import com.example.rezerwacje.uzytkownik.Uzytkownik;
 import com.example.rezerwacje.web.forms.HasloForm;
 import com.example.rezerwacje.web.forms.ImieNazwiskoForm;
+import java.util.List;
 
 public interface UzytkownikRepository{
     Uzytkownik znajdzUzytkownika(String nazwa);

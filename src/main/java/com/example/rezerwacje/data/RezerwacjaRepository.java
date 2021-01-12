@@ -1,6 +1,5 @@
 package com.example.rezerwacje.data;
 
-import com.example.rezerwacje.hotel.Hotel;
 import com.example.rezerwacje.hotel.Pokoj;
 import com.example.rezerwacje.rezerwacja.Rezerwacja;
 
@@ -9,6 +8,8 @@ import java.util.List;
 
 public interface RezerwacjaRepository {
     Rezerwacja znajdzRezerwacje(int id);
+
+    List<Rezerwacja> znajdRezerwacje(String nazwaKlienta);
 
     List<Date[]> znajdzTerminyRezerwacji(Pokoj pokoj);
 

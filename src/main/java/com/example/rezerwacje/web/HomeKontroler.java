@@ -13,6 +13,7 @@ import com.example.rezerwacje.web.forms.RezerwacjaForm;
 import com.example.rezerwacje.web.forms.UzytkownikForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -48,7 +50,13 @@ public class HomeKontroler {
 
     // GET - kiedy nie zmieniasz nic na serwerze
     @RequestMapping(method = GET)
-    public String home(Model model) {
+    public String home(Model model, final Principal principal) {
+        if (null != principal) {
+            if (getUzytkownik().getRola().equals("ROLE_PRACOWNIK"))
+                return "redirect:/pracownik";
+            if (getUzytkownik().getRola().equals("ROLE_KIEROWNIK"))
+                return "redirect:/kierownik";
+        }
         model.addAttribute(new MiastoForm());
         return "home";
     }
@@ -87,11 +95,10 @@ public class HomeKontroler {
         Hotel hotel = hotelRepository.znajdzHotel(miasto, nazwa);
         model.addAttribute("hotel", hotel);
         model.addAttribute("pokoje", pokojRepository.znajdzPokoje(hotel));
-        return "hotel";
+        return "pokoje";
     }
 
-    //todo ogarnąć rozdrobnienie rezerwacji w ciągłe przedziały
-    @RequestMapping(value = "/{miasto}/{nazwa}/{id}", method = GET)
+    @RequestMapping(value = "/rezerwacja/{miasto}/{nazwa}/{id}", method = GET)
     public String pokoj(@PathVariable String miasto, @PathVariable String nazwa, @PathVariable int id, Model model) {
         Hotel hotel = hotelRepository.znajdzHotel(miasto, nazwa);
         model.addAttribute("hotel", hotel);
@@ -104,11 +111,11 @@ public class HomeKontroler {
         model.addAttribute("rezerwacje", rezerwacje);
         model.addAttribute(new RezerwacjaForm());
 
-        return "pokoj";
+        return "rezerwacja";
     }
 
     //todo sprawdzanie dat
-    @RequestMapping(value = "/{miasto}/{nazwa}/{id}", method = POST)
+    @RequestMapping(value = "/rezerwacja/{miasto}/{nazwa}/{id}", method = POST)
     public String rezerwacja(@PathVariable String miasto, @PathVariable String nazwa, @PathVariable int id,
                              RedirectAttributes redirectAttributes, @Valid RezerwacjaForm rezerwacjaForm,
                              BindingResult errors, Model model) {
@@ -125,7 +132,7 @@ public class HomeKontroler {
                 rezerwacje.add("Od " + daty[0] + " do " + daty[1]);
             }
             model.addAttribute("rezerwacje", rezerwacje);
-            return "pokoj";
+            return "rezerwacja";
         }
 
         Rezerwacja rezerwacja = new Rezerwacja(rezerwacjaForm, getUzytkownik());
@@ -144,17 +151,17 @@ public class HomeKontroler {
                 rezerwacje.add("Od " + daty[0] + " do " + daty[1]);
             }
             model.addAttribute("rezerwacje", rezerwacje);
-            return "pokoj";
+            return "rezerwacja";
         }
 
         rezerwacja.setId(rezerwacjaRepository.znajdzIdRezerwacji(rezerwacja));
 
         redirectAttributes.addAttribute("rezerwacjaId", rezerwacja.getId());
 
-        return "redirect:/{miasto}/{nazwa}/{id}/{rezerwacjaId}";
+        return "redirect:/rezerwacja/{miasto}/{nazwa}/{id}/{rezerwacjaId}";
     }
 
-    @RequestMapping(value = "/{miasto}/{nazwa}/{id}/{rezerwacjaId}", method = GET)
+    @RequestMapping(value = "/rezerwacja/{miasto}/{nazwa}/{id}/{rezerwacjaId}", method = GET)
     public String rezerwacja(@PathVariable String miasto, @PathVariable String nazwa, @PathVariable int rezerwacjaId,
                              Model model) {
         Rezerwacja rezerwacja = rezerwacjaRepository.znajdzRezerwacje(rezerwacjaId);
@@ -169,25 +176,56 @@ public class HomeKontroler {
         model.addAttribute("rezerwacja",rezerwacja);
         model.addAttribute("cena",diff * rezerwacja.getPokoj().getCena());
 
-        return "rezerwacja";
+        return "potwierdzenieRezerwacji";
     }
 
     @RequestMapping(value = "/register", method = GET)
     public String rejestracja(Model model){
         model.addAttribute(new UzytkownikForm());
-        return "register";
+        return "rejestracja";
     }
 
-    //todo bezpieczenstwo
     @RequestMapping(value = "/register", method = POST)
     public String rejestracja(@Valid UzytkownikForm uzytkownikForm, BindingResult errors){
         if (errors.hasErrors()) {
             return "register";
         }
-
-        uzytkownikRepository.addUzytkownik(uzytkownikForm.toUzytkownik());
+        try {
+            uzytkownikRepository.addUzytkownik(uzytkownikForm.toUzytkownik());
+        }catch(DuplicateKeyException e){
+            errors.rejectValue("nazwa","user.error","Dana nazwa jest już zajęta");
+        }
+        if (errors.hasErrors()) {
+            return "register";
+        }
 
         return "redirect:/login";
+    }
+
+    @RequestMapping(value = "/rezerwacje",method = GET)
+    public String rezerwacje(Model model){
+        List<Rezerwacja> rezerwacje = rezerwacjaRepository.znajdRezerwacje(getUzytkownik().getNazwa());
+        for (Rezerwacja rezerwacja : rezerwacje){
+            rezerwacja.setPokoj(pokojRepository.znajdzPokoj(rezerwacja.getPokoj().getId()));
+            rezerwacja.setHotel(hotelRepository.znajdzHotel(rezerwacja.getPokoj()));
+        }
+        model.addAttribute(rezerwacje);
+
+        return "rezerwacje";
+    }
+
+    @RequestMapping(value = "/rezerwacje/usunRezerwacje/{idRezerwacji}", method = GET)
+    public String usunRezerwacje(@PathVariable int idRezerwacji, Model model){
+        model.addAttribute("id",idRezerwacji);
+
+        return "usunRezerwacje";
+    }
+
+    @RequestMapping(value = "/rezerwacje/usunRezerwacje/{idRezerwacji}", method = POST)
+    public String usunRezerwacje(@PathVariable int idRezerwacji){
+        rezerwacjaRepository.usunRezerwacje(idRezerwacji);
+
+        return "redirect:/rezerwacje";
     }
 
     private Uzytkownik getUzytkownik(){

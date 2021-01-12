@@ -19,7 +19,7 @@ public class JdbcRezerwacjaRepository implements RezerwacjaRepository {
             "select DATA_ROZPOCZECIA, DATA_ZAKONCZENIA from rezerwacje where ID_POKOJU = ?";
     private static final String INSERT_REZERWACJA =
             "insert into rezerwacje (id_pokoju, nazwa_klienta, data_rozpoczecia, data_zakonczenia)" +
-            "values(?,?,?,?)";
+                    "values(?,?,?,?)";
     private static final String ZNAJDZ_ID_REZERWACJI = "select id from rezerwacje where id_pokoju = ? " +
             "and nazwa_klienta = ?" +
             "and data_rozpoczecia = ?" +
@@ -27,9 +27,10 @@ public class JdbcRezerwacjaRepository implements RezerwacjaRepository {
     private static final String SELECT_FROM_REZERWACJE_WHERE_ID = "select * from rezerwacje where id = ?";
 
     private static final String SELECT_REZERWACJE_FROM_HOTELE = "select * from rezerwacje where id_pokoju in " +
-                                        "(select id from pokoje where id_hotelu = " +
-                                        "(select id from hotele where nazwa_kierownika=?))";
+            "(select id from pokoje where id_hotelu = " +
+            "(select id from hotele where nazwa_kierownika=?))";
     private static final String DELETE_REZERWACJE = "delete from rezerwacje where id = ?";
+    private static final String SELECT_FROM_REZERWACJE_WHERE_NAZWA_KLIENTA = "select * from rezerwacje where NAZWA_KLIENTA = ?";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -41,6 +42,11 @@ public class JdbcRezerwacjaRepository implements RezerwacjaRepository {
     @Override
     public Rezerwacja znajdzRezerwacje(int id) {
         return jdbcTemplate.queryForObject(SELECT_FROM_REZERWACJE_WHERE_ID, this::mapRow, id);
+    }
+
+    @Override
+    public List<Rezerwacja> znajdRezerwacje(String nazwaKlienta) {
+        return jdbcTemplate.query(SELECT_FROM_REZERWACJE_WHERE_NAZWA_KLIENTA, this::mapRow, nazwaKlienta);
     }
 
     @Override
@@ -72,12 +78,12 @@ public class JdbcRezerwacjaRepository implements RezerwacjaRepository {
 
     @Override
     public List<Rezerwacja> znajdzRezerwacjeHotelu(String nazwaKierownika) {
-        return jdbcTemplate.query(SELECT_REZERWACJE_FROM_HOTELE,this::mapRow,nazwaKierownika);
+        return jdbcTemplate.query(SELECT_REZERWACJE_FROM_HOTELE, this::mapRow, nazwaKierownika);
     }
 
     @Override
     public void usunRezerwacje(int idRezerwacji) {
-        jdbcTemplate.update(DELETE_REZERWACJE,idRezerwacji);
+        jdbcTemplate.update(DELETE_REZERWACJE, idRezerwacji);
     }
 
     private Date[] mapRowDaty(ResultSet resultSet, int rowNum) throws SQLException {

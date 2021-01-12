@@ -2,22 +2,28 @@ package com.example.rezerwacje.web.forms;
 
 import com.example.rezerwacje.hotel.Pokoj;
 
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Min;
 
 public class PokojForm {
+    @Min(value = 0, message = "{pokoj.size}")
     private int numer;
+    @Min(value = 0, message = "{pokoj.size}")
     private int rodzaj;
+    @Min(value = 1, message = "{pokoj.size}")
 	private int rozmiar;
+    @Min(value = 0, message = "{pokoj.size}")
 	private int cena;
-
-    public PokojForm(Pokoj pokoj){
-        this.numer = pokoj.getNumer();
-        this.rodzaj = pokoj.getRodzaj();
-		this.rozmiar = pokoj.getRozmiar();
-		this.cena = pokoj.getCena();
-    }
+    private int id;
 
     public PokojForm() {
+    }
+
+    public PokojForm(Pokoj pokoj){
+        this.id = pokoj.getId();
+        this.cena = pokoj.getCena();
+        this.numer = pokoj.getNumer();
+        this.rodzaj = pokoj.getRodzaj();
+        this.rozmiar = pokoj.getRozmiar();
     }
 
     public int getNumer() {
@@ -28,7 +34,7 @@ public class PokojForm {
         this.numer = numer;
     }
 
-    public String getRodzaj() {
+    public int getRodzaj() {
         return rodzaj;
     }
 
@@ -62,5 +68,9 @@ public class PokojForm {
 				", rozmiar='" + rozmiar + '\'' +
 				", cena='" + cena + '\'' +
                 '}';
+    }
+
+    public int getId() {
+        return id;
     }
 }

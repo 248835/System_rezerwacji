@@ -45,15 +45,19 @@ public class PracownikKontroler {
         model.addAttribute("rezerwacje",rezerwacje);
         model.addAttribute("hotel",hotelRepository.znajdzHotelKierownik(kierownik));
         model.addAttribute("pokoje",pokojRepository.znajdzPokojeNazwaKierownika(kierownik));
+        model.addAttribute("kierownik",kierownik);
 
-        return "rezerwacje";
+        return "widok";
     }
 
     @RequestMapping(value = "/{idRezerwacji}", method = RequestMethod.GET)
     public String zaplac(Model model, @PathVariable int idRezerwacji){
         Rezerwacja rezerwacja = rezerwacjaRepository.znajdzRezerwacje(idRezerwacji);
         rezerwacja.setPokoj(pokojRepository.znajdzPokoj(rezerwacja.getPokoj().getId()));
-        rezerwacja.setHotel(hotelRepository.znajdzHotelKierownik(getPracownik().getNazwaKierownika()));
+        if (getPracownik().getRola().equals("ROLE_PRACOWNIK"))
+            rezerwacja.setHotel(hotelRepository.znajdzHotelKierownik(getPracownik().getNazwaKierownika()));
+        else
+            rezerwacja.setHotel(hotelRepository.znajdzHotelKierownik(getPracownik().getNazwa()));
 
         long diff = TimeUnit.DAYS.convert(Math.abs(
                 rezerwacja.getKoniecRezerwacji().getTime() - rezerwacja.getPoczatekRezerwacji().getTime()
@@ -68,7 +72,9 @@ public class PracownikKontroler {
     @RequestMapping(value = "/{idRezerwacji}", method = RequestMethod.POST)
     public String zaplac(@PathVariable int idRezerwacji){
         rezerwacjaRepository.usunRezerwacje(idRezerwacji);
-        return "redirect:/pracownik";
+        if (getPracownik().getRola().equals("ROLE_PRACOWNIK"))
+            return "redirect:/pracownik";
+        return "redirect:/kierownik";
     }
 
     private Uzytkownik getPracownik(){

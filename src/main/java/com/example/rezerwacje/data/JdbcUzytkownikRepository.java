@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 @Repository
 public class JdbcUzytkownikRepository implements UzytkownikRepository{
@@ -21,10 +22,6 @@ public class JdbcUzytkownikRepository implements UzytkownikRepository{
             "VALUES(?,?,?,?,?,?)";
     private static final String UPDATE_UZYTKOWNICY_SET_IMIE_NAZWISKO = "update uzytkownicy set imie = ?, nazwisko = ? where nazwa = ?";
     private static final String UPDATE_UZYTKOWNICY_SET_HASLO = "update uzytkownicy set haslo = ? where nazwa = ?";
-    //todo dla postgres pierwsze 3 wywołania są najprawdopodbniej zbędne
-    private static final String DELETE_HOTELE_WHERE_NAZWA_KIEROWNIKA = "delete from hotele where nazwa_kierownika = ?";
-    private static final String DELETE_REZERWACJE_WHERE_NAZWA_KLIENTA = "delete from rezerwacje where nazwa_klienta = ?";
-    private static final String DELETE_PRACOWNIKOW_FROM_UZYTKOWNICY = "delete from uzytkownicy where nazwa_kierownika = ?";
     private static final String DELETE_UZYTKOWNICY_WHERE_NAZWA = "delete from uzytkownicy where nazwa = ?";
 
     private final JdbcTemplate jdbcTemplate;
@@ -69,9 +66,6 @@ public class JdbcUzytkownikRepository implements UzytkownikRepository{
 
     @Override
     public void usunKonto(String nazwa) {
-        jdbcTemplate.update(DELETE_HOTELE_WHERE_NAZWA_KIEROWNIKA,nazwa);
-        jdbcTemplate.update(DELETE_PRACOWNIKOW_FROM_UZYTKOWNICY,nazwa);
-        jdbcTemplate.update(DELETE_REZERWACJE_WHERE_NAZWA_KLIENTA,nazwa);
         jdbcTemplate.update(DELETE_UZYTKOWNICY_WHERE_NAZWA,nazwa);
     }
     

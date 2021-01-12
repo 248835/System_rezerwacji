@@ -16,6 +16,8 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 import javax.sql.DataSource;
 
@@ -45,6 +47,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        CharacterEncodingFilter filter = new CharacterEncodingFilter();
+        filter.setEncoding("UTF-8");
+        filter.setForceEncoding(true);
+        http.addFilterBefore(filter, CsrfFilter.class);
+
         http
                 .formLogin()
                 //.loginPage("/login")
@@ -56,10 +63,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic()//.realmName("Spittr")
                 .and()
                 .authorizeRequests()
-                .antMatchers(/*HttpMethod.POST, */"/{miasto}/{nazwa}/{id}").hasRole("KLIENT") //fixme powinno działać, a nie działa :<
-                .antMatchers("/kierownik").hasRole("KIEROWNIK")
-                .antMatchers("/pracownik").hasRole("PRACOWNIK")
-                .antMatchers("/klient").authenticated()
+                .antMatchers("/rezerwacja/{miasto}/{nazwa}/{id}/**", "/rezerwacje/**").hasRole("KLIENT")
+                .antMatchers("/kierownik/**").hasRole("KIEROWNIK")
+                .antMatchers("/pracownik/{idRezerwacji}/**").hasAnyRole("PRACOWNIK","KIEROWNIK")
+                .antMatchers("/pracownik/**").hasRole("PRACOWNIK")
+                .antMatchers("/klient/**").authenticated()
                 .anyRequest().permitAll().and()
                 .requiresChannel()
                 //.antMatchers("/register").requiresSecure()    //fixme spring bully :'(
