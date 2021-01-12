@@ -66,13 +66,13 @@ public class WebConfig implements WebMvcConfigurer {
 //        return new StandardServletMultipartResolver();
 //    }
 
-    @Bean
-    public SpringTemplateEngine templateEngine(ITemplateResolver templateResolver) {
-        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-        templateEngine.setTemplateResolver(templateResolver);
-        templateEngine.addDialect(new SpringSecurityDialect());
-        return templateEngine;
-    }
+//    @Bean
+//    public SpringTemplateEngine templateEngine(ITemplateResolver templateResolver) {
+//        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+//        templateEngine.setTemplateResolver(templateResolver);
+//        templateEngine.addDialect(new SpringSecurityDialect());
+//        return templateEngine;
+//    }
 
     // najwyrazniej bylo potrzebne
 //    @Override
