@@ -188,7 +188,7 @@ public class HomeKontroler {
     @RequestMapping(value = "/register", method = POST)
     public String rejestracja(@Valid UzytkownikForm uzytkownikForm, BindingResult errors){
         if (errors.hasErrors()) {
-            return "rejestracja";
+            return "register";
         }
         try {
             uzytkownikRepository.addUzytkownik(uzytkownikForm.toUzytkownik());
@@ -196,7 +196,7 @@ public class HomeKontroler {
             errors.rejectValue("nazwa","user.error","Dana nazwa jest już zajęta");
         }
         if (errors.hasErrors()) {
-            return "rejestracja";
+            return "register";
         }
 
         return "redirect:/login";

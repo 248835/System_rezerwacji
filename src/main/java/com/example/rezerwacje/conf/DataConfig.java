@@ -1,5 +1,6 @@
 //package com.example.rezerwacje.conf;
 //
+//import org.springframework.beans.factory.annotation.Qualifier;
 //import org.springframework.context.annotation.Bean;
 //import org.springframework.context.annotation.Configuration;
 //import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,7 +12,7 @@
 //@Configuration
 //public class DataConfig {
 //
-//    @Bean
+//    @Bean(name = "dupa")
 //    public DataSource dataSource() {
 //        return new EmbeddedDatabaseBuilder()
 //                .setType(EmbeddedDatabaseType.H2)
@@ -21,8 +22,7 @@
 //    }
 //
 //    @Bean
-//    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+//    public JdbcTemplate jdbcTemplate(@Qualifier("dupa") DataSource dataSource) {
 //        return new JdbcTemplate(dataSource);
 //    }
-//
 //}

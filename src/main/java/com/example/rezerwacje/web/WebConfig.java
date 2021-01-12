@@ -24,10 +24,10 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 //@EnableWebMvc // wlacza spring mvc
 //@ComponentScan("com.example.rezerwacje.web") // skan komponentow
 public class WebConfig implements WebMvcConfigurer {
-    @Bean
-    public SpringSecurityDialect springSecurityDialect(){
-        return new SpringSecurityDialect();
-    }
+	@Bean
+	public SpringSecurityDialect springSecurityDialect(){
+		return new SpringSecurityDialect();
+	}
 //    private ApplicationContext applicationContext;
 //
 //    public void setApplicationContext(ApplicationContext applicationContext) {
