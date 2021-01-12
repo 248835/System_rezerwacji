@@ -1,21 +1,23 @@
 package com.example.rezerwacje.data;
 
-import com.example.rezerwacje.hotel.Hotel;
 import com.example.rezerwacje.hotel.Pokoj;
 import com.example.rezerwacje.rezerwacja.Rezerwacja;
-import com.example.rezerwacje.uzytkownik.Uzytkownik;
 
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public interface RezerwacjaRepository {
-    List<Rezerwacja> znajdzRezerwacje(Hotel hotel);
+    Rezerwacja znajdzRezerwacje(int id);
 
-    List<Rezerwacja> znajdzRezerwacjePracownik(Uzytkownik uzytkownik);
+    List<Rezerwacja> znajdRezerwacje(String nazwaKlienta);
 
-    Rezerwacja usunRezerwacje(Rezerwacja rezerwacja);
+    List<Date[]> znajdzTerminyRezerwacji(Pokoj pokoj);
 
-    void dodajRezerwacje(Rezerwacja rezerwacja, Uzytkownik uzytkownik);
+    void dodajRezerwacje(Rezerwacja rezerwacja);
 
-    void modyfikujRezerwacje(Rezerwacja rezerwacja, Uzytkownik uzytkownik);
+    Integer znajdzIdRezerwacji(Rezerwacja rezerwacja);
+
+    List<Rezerwacja> znajdzRezerwacjeHotelu(String nazwaKierownika);
+
+    void usunRezerwacje(int idRezerwacji);
 }

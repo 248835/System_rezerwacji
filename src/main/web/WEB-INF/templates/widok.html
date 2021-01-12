@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pl-PL" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+    <title>Widok</title>
+</head>
+<body>
+<div id="header" th:include="page :: header"></div>
+<div class="container list-group">
+    <div class="list-group-item list-group-item-action active" aria-current="true">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">Hotel <span th:text="${hotel.nazwa}"></span></h5>
+            <small>Ocena: <span th:text="${hotel.ocena}"></span></small>
+        </div>
+        <p class="mb-1">Adres: <span th:text="${hotel.miasto} + ' ' + ${hotel.ulica}"></span></p>
+        <small sec:authorize="hasRole('PRACOWNIK')">Kierownik: <span th:text="${kierownik}"></span></small>
+        <a sec:authorize="hasRole('KIEROWNIK')" class="btn btn-secondary" th:href="@{/kierownik/modyfikujHotel}"
+           role="button">Modyfikuj hotel</a>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md">
+            <div th:each="pokoj : ${pokoje}">
+                <a th:href="@{'/kierownik/pokoj/' + ${pokoj.id}}" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1"><span th:text="${pokoj.rozmiar}"></span>. osobowy pokój <span
+                                th:text="${pokoj.rodzaj}"></span></h5>
+                        <small class="text-muted">Cena: <span th:text="${pokoj.cena}"></span></small>
+                    </div>
+                    <p class="mb-1">Tu może być opis</p>
+                    <small>Numer Pokoju: <span th:text="${pokoj.numer}"></span></small>
+                </a>
+            </div>
+            <a sec:authorize="hasRole('KIEROWNIK')" class="btn btn-primary" th:href="@{/kierownik/dodajPokoj}"
+               role="button">Dodaj pokoj</a>
+        </div>
+        <div sec:authorize="hasRole('KIEROWNIK')" class="col-md">
+            <div sec:authorize="hasRole('KIEROWNIK')" th:each="pracownik : ${pracownicy}">
+                <a sec:authorize="hasRole('KIEROWNIK')" th:href="@{'/kierownik/pracownik/' + ${pracownik.nazwa}}"
+                   class="list-group-item list-group-item-action">
+                    <div sec:authorize="hasRole('KIEROWNIK')" class="d-flex w-100 justify-content-between">
+                        <h5 sec:authorize="hasRole('KIEROWNIK')" class="mb-1">Pracownik: <span
+                                th:text="${pracownik.imie} + ' ' + ${pracownik.nazwisko}"></span></h5>
+                    </div>
+                </a>
+            </div>
+            <a sec:authorize="hasRole('KIEROWNIK')" class="btn btn-primary" th:href="@{/kierownik/dodajPracownika}"
+               role="button">Dodaj pracownika</a>
+        </div>
+        <div class="col-md">
+            <div th:each="rezerwacja : ${rezerwacje}">
+                <a th:href="@{'/pracownik/' + ${rezerwacja.id}}" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">Rodzaj pokoju: <span th:text="${rezerwacja.pokoj.rodzaj}"></span></h5>
+                    </div>
+                    <p class="mb-1">Rezerwujący: <span
+                            th:text="${rezerwacja.uzytkownik.imie} + ' ' + ${rezerwacja.uzytkownik.nazwisko}"></span>
+                    </p>
+                    <small>Termin rezerwacji: <span
+                            th:text="${rezerwacja.poczatekRezerwacji} + ' do ' + ${rezerwacja.koniecRezerwacji}"></span></small>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

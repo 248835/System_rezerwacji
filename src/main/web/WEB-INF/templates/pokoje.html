@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+    <title>Wybór pokoju</title>
+</head>
+<body>
+<div id="header" th:include="page :: header"></div>
+<div class="container list-group">
+    <div class="list-group-item list-group-item-action active" aria-current="true">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">Hotel <span th:text="${nazwa}"></span></h5>
+            <small>Ocena: <span th:text="${hotel.ocena}"></span></small>
+        </div>
+        <p class="mb-1">Tu będzie opis jak się go ogarnie</p>
+        <small>Adres: <span th:text="${hotel.miasto} + ' ' + ${hotel.ulica}"></span></small>
+    </div>
+    <div th:each="pokoj : ${pokoje}">
+        <a th:href="@{'/rezerwacja/' + ${miasto} + '/' + ${nazwa} + '/' + ${pokoj.id}}"
+           class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1"><span th:text="${pokoj.rozmiar}"></span>. osobowy pokój <span
+                        th:text="${pokoj.rodzaj}"></span>
+                </h5>
+                <small class="text-muted">Cena: <span th:text="${pokoj.cena}"></span></small>
+            </div>
+            <p class="mb-1">Tu może być opis</p>
+        </a>
+    </div>
+</div>
+</body>
+</html>
