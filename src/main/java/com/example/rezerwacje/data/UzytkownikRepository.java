@@ -1,23 +1,20 @@
 package com.example.rezerwacje.data;
 
 import com.example.rezerwacje.uzytkownik.Uzytkownik;
-
+import com.example.rezerwacje.web.forms.HasloForm;
+import com.example.rezerwacje.web.forms.ImieNazwiskoForm;
 import java.util.List;
 
 public interface UzytkownikRepository{
     Uzytkownik znajdzUzytkownika(String nazwa);
 
-    List<Uzytkownik> znajdzPracownikow(Uzytkownik id);
-
     void addUzytkownik(Uzytkownik uzytkownik);
 
-    void addPracownik(Uzytkownik pracownik, Uzytkownik kierownik);
+    void zmienImieNazwisko(ImieNazwiskoForm imieNazwiskoForm, String nazwa);
 
-    void usunUzytkownika(Uzytkownik uzytkownik);
+    void zmienHaslo(HasloForm hasloForm, String nazwa);
 
-    void usunPracownika(Uzytkownik pracownik, Uzytkownik kierownik);
-
-    void modyfikujUzytkownik(Uzytkownik uzytkownik);
-
-    void modyfikujPracownik(Uzytkownik pracownik, Uzytkownik kierownik);
+    void usunKonto(String nazwa);
+    
+	List<Uzytkownik> znajdzPracownika(String nazwaKierwonika);
 }

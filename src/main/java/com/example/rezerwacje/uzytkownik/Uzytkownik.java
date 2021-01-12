@@ -1,26 +1,12 @@
 package com.example.rezerwacje.uzytkownik;
 
 public class Uzytkownik {
-    private int id;
-
     private String nazwa;
-
     private String haslo;
-
     private String imie;
-
     private String nazwisko;
-
     private String rola;
-
-    public Uzytkownik(int id, String nazwa, String haslo, String imie, String nazwisko, String rola) {
-        this.id = id;
-        this.nazwa = nazwa;
-        this.haslo = haslo;
-        this.imie = imie;
-        this.nazwisko = nazwisko;
-        this.rola = rola;
-    }
+    private String nazwaKierownika;
 
     public Uzytkownik(String nazwa, String haslo, String imie, String nazwisko, String rola) {
         this.nazwa = nazwa;
@@ -30,12 +16,17 @@ public class Uzytkownik {
         this.rola = rola;
     }
 
-    public int getId() {
-        return id;
+    public Uzytkownik(String nazwa, String haslo, String imie, String nazwisko, String rola, String nazwaKierownika) {
+        this.nazwa = nazwa;
+        this.haslo = haslo;
+        this.imie = imie;
+        this.nazwisko = nazwisko;
+        this.rola = rola;
+        this.nazwaKierownika = nazwaKierownika;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public Uzytkownik(String nazwa) {
+        this.nazwa = nazwa;
     }
 
     public String getNazwa() {
@@ -76,5 +67,25 @@ public class Uzytkownik {
 
     public void setRola(String rola) {
         this.rola = rola;
+    }
+
+    public String getNazwaKierownika() {
+        return nazwaKierownika;
+    }
+
+    public void setNazwaKierownika(String nazwaKierownika) {
+        this.nazwaKierownika = nazwaKierownika;
+    }
+
+    @Override
+    public String toString() {
+        return "Uzytkownik{" +
+                "nazwa='" + nazwa + '\'' +
+                ", haslo='" + haslo + '\'' +
+                ", imie='" + imie + '\'' +
+                ", nazwisko='" + nazwisko + '\'' +
+                ", rola='" + rola + '\'' +
+                ", nazwaKierownika='" + nazwaKierownika + '\'' +
+                '}';
     }
 }

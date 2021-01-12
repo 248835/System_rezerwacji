@@ -1,109 +1,101 @@
 package com.example.rezerwacje.web;
 
-import com.example.rezerwacje.data.*;
-import com.example.rezerwacje.hotel.Hotel;
-import com.example.rezerwacje.rezerwacja.Oferta;
-import com.example.rezerwacje.hotel.Pokoj;
-import com.example.rezerwacje.rezerwacja.Rezerwacja;
+import com.example.rezerwacje.data.UzytkownikRepository;
 import com.example.rezerwacje.uzytkownik.Uzytkownik;
+import com.example.rezerwacje.web.forms.HasloForm;
+import com.example.rezerwacje.web.forms.ImieNazwiskoForm;
+import com.example.rezerwacje.web.forms.UzytkownikForm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @Controller
-@RequestMapping("/uzytkownik")
+@RequestMapping("/klient")
 public class KlientKontroler {
-    private HotelRepository hotelRepository = ObjectHotelRepository.getInstance();
-    private RezerwacjaRepository rezerwacjaRepository = ObjectRezerwacjaRepository.getInstance();
-    private PokojRepository pokojRepository = ObjectPokojRepository.getInstance();
-    private UzytkownikRepository uzytkownikRepository = ObjectUzytkownikRepository.getInstance();
+    private final UzytkownikRepository uzytkownikRepository;
 
-//    @Autowired
-//    public KlientKontroler(ObjectHotelRepository hotelRepository, ObjectRezerwacjaRepository jdbcRezerwacjaRepository) {   //todo
-//        this.hotelRepository = hotelRepository;
-//        this.jdbcRezerwacjaRepository = jdbcRezerwacjaRepository;
-//    }
+    @Autowired
+    public KlientKontroler(UzytkownikRepository uzytkownikRepository) {
+        this.uzytkownikRepository = uzytkownikRepository;
+    }
 
-    //https://stackoverflow.com/questions/23144358/how-to-loop-through-map-in-thymeleaf
     @RequestMapping(method = RequestMethod.GET)
-    public Map<Hotel,List<Pokoj>> pokazOferty(String adres, Date poczatek, Date koniec){
-        return pokojRepository.znajdzOferty(adres,poczatek,koniec);
+    public String pokazOferty(Model model) {
+        Uzytkownik uzytkownik = getUzytkownik();
+        if (uzytkownik.getRola().equals("ROLE_PRACOWNIK")) {
+            Uzytkownik kierownik = uzytkownikRepository.znajdzUzytkownika(uzytkownik.getNazwaKierownika());
+            String imieNazwiskoKierownika = kierownik.getImie() + ' ' + kierownik.getNazwisko();
+            model.addAttribute("imieNazwiskoKierownika", imieNazwiskoKierownika);
+        }
+        model.addAttribute(uzytkownik);
+        return "konto";
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    public String wybierzZOfert(RedirectAttributes redirectAttributes,
-                              Oferta oferta){
-        redirectAttributes.addAttribute("nazwaHotelu",oferta.getHotel().getNazwa());
-        redirectAttributes.addFlashAttribute("oferta",oferta);
-        return "redirect:/oferty/{nazwaHotelu}";
+    @RequestMapping(value = "/zmienImieNazwisko", method = RequestMethod.GET)
+    public String zmienImieNazwisko(Model model) {
+        model.addAttribute(new ImieNazwiskoForm(getUzytkownik()));
+
+        return "zmienImieNazwisko";
     }
 
-    //https://www.baeldung.com/spring-web-flash-attributes
-    @RequestMapping(method = RequestMethod.GET, value = "/oferty/{nazwaHotelu}")
-    public String pokazOferte(){
-        return "oferta";
+    @RequestMapping(value = "/zmienImieNazwisko", method = RequestMethod.POST)
+    public String zmienImieNazwisko(@Valid ImieNazwiskoForm imieNazwiskoForm, BindingResult errors) {
+        if (errors.hasErrors()) {
+            return "zmienImieNazwisko";
+        }
+        uzytkownikRepository.zmienImieNazwisko(imieNazwiskoForm, getUzytkownik().getNazwa());
+        return "redirect:/klient";
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/oferty/{nazwaHotelu}")
-    public String wybierzOferte(Rezerwacja rezerwacja){
-        rezerwacjaRepository.dodajRezerwacje(rezerwacja, getUzytkownik());
-        return "redirect:";
+    @RequestMapping(value = "/zmienHaslo", method = RequestMethod.GET)
+    public String zmienHaslo(Model model) {
+        model.addAttribute(new HasloForm());
+
+        return "zmienHaslo";
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/usunKonto")
-    public String usunKonto(){
-        return "usunKontoUzytkownika";
+    @RequestMapping(value = "/zmienHaslo", method = RequestMethod.POST)
+    public String zmienHaslo(@Valid HasloForm hasloForm, BindingResult errors) {
+        if (errors.hasErrors()) {
+            return "zmienHaslo";
+        }
+        uzytkownikRepository.zmienHaslo(hasloForm, getUzytkownik().getNazwa());
+        return "redirect:/klient";
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/usunKonto")
-    public void usunKontoProcess(){
+    @RequestMapping(value = "/usunKonto", method = RequestMethod.GET)
+    public String usunKonto(Model model) {
 
-        uzytkownikRepository.usunUzytkownika(getUzytkownik());
+        return "usunKonto";
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/modyfikujKonto")
-    public Uzytkownik modyfikujKonto(){
-        return getUzytkownik();
+    @RequestMapping(value = "/usunKonto", method = RequestMethod.POST)
+    public String usunKonto() {
+        uzytkownikRepository.usunKonto(getUzytkownik().getNazwa());
+        HttpServletRequest request =
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+                        .getRequest();
+        new SecurityContextLogoutHandler().logout(request, null, null);
+        return "redirect:/";
     }
 
-    @RequestMapping(method = RequestMethod.POST,value = "/modyfikujKonto")
-    public void modyfikujKontoProcess(Uzytkownik uzytkownik){
-        uzytkownikRepository.modyfikujUzytkownik(uzytkownik);
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/modyfikujRezerwacje")
-    public String modyfikujRezerwacje(Rezerwacja rezerwacja){
-        return "modyfikujRezerwacje";
-    }
-
-    @RequestMapping(method = RequestMethod.POST,value = "/modyfikujRezerwacje")
-    public void modyfikujRezerwacjeProcess(Rezerwacja rezerwacja){
-        rezerwacjaRepository.modyfikujRezerwacje(rezerwacja,getUzytkownik());
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/usunRezerwacje")
-    public String usunRezerwacje(Rezerwacja rezerwacja){
-        return "usunRezerwacje";
-    }
-
-    @RequestMapping(method = RequestMethod.POST,value = "/usumRezerwacje")
-    public void usunRezerwacjeProcess(Rezerwacja rezerwacja){
-        rezerwacjaRepository.usunRezerwacje(rezerwacja);
-    }
-
-    private Uzytkownik getUzytkownik(){
+    private Uzytkownik getUzytkownik() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username;
-        if(principal instanceof UserDetails){
-            username = ((UserDetails)principal).getUsername();
-        }else{
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else {
             username = principal.toString();
         }
 

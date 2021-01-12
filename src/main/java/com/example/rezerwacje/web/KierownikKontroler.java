@@ -2,176 +2,226 @@ package com.example.rezerwacje.web;
 
 import com.example.rezerwacje.data.*;
 import com.example.rezerwacje.hotel.Hotel;
-import com.example.rezerwacje.hotel.Pokoj;
 import com.example.rezerwacje.rezerwacja.Rezerwacja;
 import com.example.rezerwacje.uzytkownik.Uzytkownik;
+import com.example.rezerwacje.web.forms.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Set;
 
 @Controller
 @RequestMapping("/kierownik")
 public class KierownikKontroler {
-    private UzytkownikRepository uzytkownikRepository = ObjectUzytkownikRepository.getInstance();
-    private HotelRepository hotelRepository = ObjectHotelRepository.getInstance();
-    private PokojRepository pokojRepository = ObjectPokojRepository.getInstance();
-    private RezerwacjaRepository rezerwacjaRepository = ObjectRezerwacjaRepository.getInstance();
 
-//    @Autowired
-//    public KierownikKontroler(ObjectUzytkownikRepository jdbcUzytkownikRepository, ObjectHotelRepository objectHotelRepository, ObjectPokojRepository jdbcPokojRepository, ObjectRezerwacjaRepository jdbcRezerwacjaRepository) {
-//        this.jdbcUzytkownikRepository = jdbcUzytkownikRepository;
-//        this.objectHotelRepository = objectHotelRepository;
-//        this.jdbcPokojRepository = jdbcPokojRepository;
-//        this.jdbcRezerwacjaRepository = jdbcRezerwacjaRepository;
-//    }
+    private final UzytkownikRepository uzytkownikRepository;
+    private final HotelRepository hotelRepository;
+    private final PokojRepository pokojRepository;
+    private final RezerwacjaRepository rezerwacjaRepository;
 
-    @RequestMapping(method = RequestMethod.GET)
-    public List<Hotel> ekranGlownyHotele(){
-
-        return hotelRepository.znajdzHotele(getKierownik());
+    @Autowired
+    public KierownikKontroler(UzytkownikRepository uzytkownikRepository, HotelRepository hotelRepository,
+                              PokojRepository pokojRepository, RezerwacjaRepository rezerwacjaRepository) {
+        this.uzytkownikRepository = uzytkownikRepository;
+        this.hotelRepository = hotelRepository;
+        this.pokojRepository = pokojRepository;
+        this.rezerwacjaRepository = rezerwacjaRepository;
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<Uzytkownik> ekranGlownyPracownicy(){
+    public String widok(Model model) {
+        Hotel hotel = hotelRepository.znajdzHotelKierownik(getKierownik().getNazwa());
+        if (hotel == null){
+            model.addAttribute(new HotelForm());
+            return "dodajHotel";
+        }
+        List<Rezerwacja> rezerwacje = rezerwacjaRepository.znajdzRezerwacjeHotelu(getKierownik().getNazwa());
+        for (Rezerwacja rezerwacja : rezerwacje) {
+            rezerwacja.setPokoj(pokojRepository.znajdzPokoj(rezerwacja.getPokoj().getId()));
+            rezerwacja.setUzytkownik(uzytkownikRepository.znajdzUzytkownika(rezerwacja.getUzytkownik().getNazwa()));
+        }
+        model.addAttribute("rezerwacje", rezerwacje);
+        model.addAttribute("hotel", hotel);
+        model.addAttribute("pokoje", pokojRepository.znajdzPokojeNazwaKierownika(getKierownik().getNazwa()));
+        model.addAttribute("pracownicy", uzytkownikRepository.znajdzPracownika(getKierownik().getNazwa()));
 
-        return uzytkownikRepository.znajdzPracownikow(getKierownik());
+        return "widok";
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String ekranGlownyWybor(){
-        String string=null;
-        // todo logika wyboru miedzy wyborem hotelu, dodaniem hotelu, dodaniem pracownika - zwraca odpowiedni widok
-        return string;
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/hotele")
-    public List<Rezerwacja> listaRezerwacji(Hotel hotel){
-
-        return rezerwacjaRepository.znajdzRezerwacje(hotel);
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/hotele")
-    public Set<Pokoj> listaPokoi(Hotel hotel){
-
-        //todo logika wyboru hotelu
-        return pokojRepository.znajdzPokoje(getKierownik(),hotel);
-    }
-
-    @RequestMapping(method = RequestMethod.POST, value = "/hotel")
-    public String wyborZHotele(){
-        String string=null;
-        //todo logika wyboru między: wybór rezerwacji, dodaj pokój
-        return string;
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/hotel/submit")
-    public String hotelForm(){
-        return "hotelForm";
-    }
-
-    @RequestMapping(method = RequestMethod.POST, value = "/hotel/submit")
-    public String przetworzHotelForm(Hotel hotel){
-        hotelRepository.addHotel(getKierownik(),hotel);
+    public String dodajHotel(@Valid HotelForm hotelForm, BindingResult errors){
+        if (errors.hasErrors()){
+            return "dodajHotel";
+        }
+        hotelRepository.dodajHotel(hotelForm.toHotel(), getKierownik().getNazwa());
 
         return "redirect:/kierownik";
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/pokoj/submit")
-    public String pokojForm(){
-        return "pokojForm";
+    @RequestMapping(method = RequestMethod.GET, value = "/pokoj/{idPokoju}")
+    public String modyfikujPokoj(@PathVariable int idPokoju, Model model) {
+        model.addAttribute(new PokojForm(pokojRepository.znajdzPokoj(idPokoju)));
+
+        return "pokoj";
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/pokoj/submit")
-    public String przetworzPokojForm(Pokoj pokoj, Hotel hotel){
-        pokojRepository.dodajPokoj(pokoj,hotel);
+    @RequestMapping(method = RequestMethod.POST, value = "/pokoj/{idPokoju}")
+    public String modyfikujPokoj(@PathVariable int idPokoju, @Valid PokojForm pokojForm, BindingResult errors) {
+        if (errors.hasErrors()) {
+            return "pokoj";
+        }
+        try {
+            pokojRepository.zmienDanePokoju(pokojForm, idPokoju);
+        } catch (DuplicateKeyException e) {
+            errors.rejectValue("numer", "{user.error}", "Pokój z danym numerym już istnieje");
+        }
+        if (errors.hasErrors()) {
+            return "pokoj";
+        }
 
         return "redirect:/kierownik";
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/pracownik/submit")
-    public String pracownikForm(){
-        return "pracownikForm";
+    @RequestMapping(method = RequestMethod.GET, value = "/dodajPokoj")
+    public String dodajPokoj(Model model) {
+        model.addAttribute(new PokojForm());
+
+        return "dodajPokoj";
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/pracownik/submit")
-    public String przetworzPracownikForm(Uzytkownik pracownik){
-        uzytkownikRepository.addPracownik(pracownik,getKierownik());
+    @RequestMapping(method = RequestMethod.POST, value = "/dodajPokoj")
+    public String dodajPokoj(@Valid PokojForm pokojForm, BindingResult errors) {
+        if (errors.hasErrors()) {
+            return "dodajPokoj";
+        }
+        try {
+            pokojRepository.dodajPokoj(pokojForm.toPokoj(),
+                    hotelRepository.znajdzHotelKierownik(getKierownik().getNazwa()).getId());
+        } catch (DuplicateKeyException e) {
+            errors.rejectValue("numer", "{user.error}", "Pokój z danym numerym już istnieje");
+        }
+        if (errors.hasErrors()) {
+            return "dodajPokoj";
+        }
 
         return "redirect:/kierownik";
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/pracownik/usun")
-    public String usunPracownika(){
-        return "usunPracownika";
-    }
+    @RequestMapping(method = RequestMethod.GET, value = "/pokoj/{idPokoju}/usunPokoj")
+    public String usunPokoj(@PathVariable int idPokoju, Model model) {
+        model.addAttribute("id", idPokoju);
 
-    @RequestMapping(method = RequestMethod.POST, value = "/pracownik/usun")
-    public void usunPracownikProcess(Uzytkownik pracownik){
-        uzytkownikRepository.usunPracownika(pracownik,getKierownik());
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/pracownik/modyfikuj")
-    public String modyfikujPracownik(Uzytkownik pracownik){
-        return "modyfikujPracownika";
-    }
-
-    @RequestMapping(method = RequestMethod.POST, value = "/pracownik/modyfikuj")
-    public void modyfikujPracownikProcess(Uzytkownik pracownik){
-        uzytkownikRepository.modyfikujPracownik(pracownik,getKierownik());
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/hotel/modyfikuj")
-    public String modyfikujHotel(Hotel hotel){
-        return "modyfikujHotel";
-    }
-
-    @RequestMapping(method = RequestMethod.POST, value = "/hotel/modyfikuj")
-    public void modyfikujHotelProcess(Hotel hotel){
-        hotelRepository.modyfikujHotel(hotel);
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/hotel/usun")
-    public String usunHotel(Hotel hotel){
-        return "uusnHotel";
-    }
-
-    @RequestMapping(method = RequestMethod.POST, value = "/hotel/usun")
-    public void usunHotelProcess(Hotel hotel){
-        hotelRepository.usunHotel(hotel);
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/pokoj/modyfikuj")
-    public String modyfikujPokoj(Pokoj pokoj){
-        return "modyfikujPokoj";
-    }
-
-    @RequestMapping(method = RequestMethod.POST, value = "/pokoj/modyfikuj")
-    public void modyfikujPokojProcess(Pokoj pokoj){
-        pokojRepository.modyfikujPokoj(pokoj);
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/pokoj/usun")
-    public String usunPokoj(Pokoj pokoj){
         return "usunPokoj";
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/pokoj/usun")
-    public void usunPokojProcess(Pokoj pokoj){
-        pokojRepository.usunPokoj(pokoj);
+    @RequestMapping(method = RequestMethod.POST, value = "/pokoj/{idPokoju}/usunPokoj")
+    public String usunPokoj(@PathVariable int idPokoju) {
+        pokojRepository.usunPokoj(idPokoju);
+
+        return "redirect:/kierownik";
     }
 
-    private Uzytkownik getKierownik(){
+    @RequestMapping(method = RequestMethod.GET, value = "/pracownik/{nazwaPracownika}")
+    public String pracownik(@PathVariable String nazwaPracownika, Model model) {
+        model.addAttribute(new ImieNazwiskoForm(uzytkownikRepository.znajdzUzytkownika(nazwaPracownika)));
+        model.addAttribute("nazwa", nazwaPracownika);
+        return "pracownik";
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/pracownik/{nazwaPracownika}")
+    public String pracownik(@PathVariable String nazwaPracownika, ImieNazwiskoForm imieNazwiskoForm,
+                            BindingResult errors) {
+        if (errors.hasErrors()) {
+            return "pracownik";
+        }
+
+        uzytkownikRepository.zmienImieNazwisko(imieNazwiskoForm, nazwaPracownika);
+
+        return "redirect:/kierownik";
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/pracownik/{nazwaPracownika}/usunPracownika")
+    public String usunPracownika(@PathVariable String nazwaPracownika, Model model) {
+        model.addAttribute("nazwa", nazwaPracownika);
+
+        return "usunPracownika";
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/pracownik/{nazwaPracownika}/usunPracownika")
+    public String usunPracownika(@PathVariable String nazwaPracownika) {
+        uzytkownikRepository.usunKonto(nazwaPracownika);
+
+        return "redirect:/kierownik";
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/dodajPracownika")
+    public String dodajPracownika(Model model) {
+        model.addAttribute(new ImieNazwiskoForm());
+
+        return "dodajPracownika";
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/dodajPracownika")
+    public String dodajPracownika(ImieNazwiskoForm imieNazwiskoForm, BindingResult errors) {
+        if (errors.hasErrors()){
+            return "dodajPracownka";
+        }
+        Uzytkownik pracownik = new Uzytkownik(imieNazwiskoForm.getImie() + ' ' + imieNazwiskoForm.getNazwisko(),
+                "password", imieNazwiskoForm.getImie(), imieNazwiskoForm.getNazwisko(),"ROLE_PRACOWNIK",
+                getKierownik().getNazwa());
+
+        uzytkownikRepository.addUzytkownik(pracownik);
+
+        return "redirect:/kierownik";
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/modyfikujHotel")
+    public String modyfikujHotel(Model model) {
+        model.addAttribute(new HotelForm(hotelRepository.znajdzHotelKierownik(getKierownik().getNazwa())));
+        System.out.println(hotelRepository.znajdzHotelKierownik(getKierownik().getNazwa()));
+
+        return "modyfikujHotel";
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/modyfikujHotel")
+    public String modyfikujHotel(HotelForm hotelForm, BindingResult errors) {
+        if (errors.hasErrors()){
+            return "modyfikujHotel";
+        }
+        System.out.println(hotelForm);
+        hotelRepository.zmienHotel(hotelForm,getKierownik().getNazwa());
+
+        return "redirect:/kierownik";
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/usunHotel")
+    public String usunHotel() {
+
+        return "usunHotel";
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/usunHotel")
+    public String usunHotelProcess() {
+        hotelRepository.usunHotel(getKierownik().getNazwa());
+
+        return "redirect:/kierownik";
+    }
+
+    private Uzytkownik getKierownik() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username;
-        if(principal instanceof UserDetails){
-            username = ((UserDetails)principal).getUsername();
-        }else{
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else {
             username = principal.toString();
         }
 

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="en">
+<body>
+<div th:fragment="header">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+    <h1 class="text-center"><a th:href="@{/}">System Rezerwacji</a></h1>
+    <ul class="nav justify-content-end">
+        <li sec:authorize="!isAuthenticated()" class="nav-item">
+            <a class="nav-link active" aria-current="page" th:href="@{/register}">Register</a>
+        </li>
+        <li sec:authorize="isAuthenticated()" class="nav-item">
+            <a class="nav-link active" aria-current="page" th:href="@{/logout}">Logout</a>
+        </li>
+        <li sec:authorize="!isAuthenticated()" class="nav-item">
+            <a class="nav-link active" aria-current="page" th:href="@{/login}">Login</a>
+        </li>
+        <li sec:authorize="isAuthenticated()" class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">Menu</a>
+            <ul class="dropdown-menu">
+                <li sec:authorize="hasRole('KIEROWNIK')"><a class="dropdown-item" th:href="@{/kierownik}">Hotel</a></li>
+                <li sec:authorize="hasRole('PRACOWNIK')"><a class="dropdown-item" th:href="@{/pracownik}">Hotel</a></li>
+                <li sec:authorize="hasRole('KLIENT')"><a class="dropdown-item" th:href="@{/rezerwacje}">Rezerwacje</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" th:href="@{/klient}">Konto</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

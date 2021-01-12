@@ -2,20 +2,24 @@ package com.example.rezerwacje.data;
 
 import com.example.rezerwacje.hotel.Hotel;
 import com.example.rezerwacje.hotel.Pokoj;
-import com.example.rezerwacje.uzytkownik.Uzytkownik;
+import com.example.rezerwacje.web.forms.HotelForm;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public interface HotelRepository {
-    List<Hotel> znajdzHotele(Uzytkownik uzytkownik);
+    Hotel znajdzHotelKierownik(String nazwaKierownika);
 
-    Hotel znajdzHotelPracownika(Uzytkownik pracownik);
+    List<Hotel> znajdzHoteleMiasto(String miasto);
 
-    void addHotel(Uzytkownik kierownik, Hotel hotel);
+    Hotel znajdzHotel(String miasto, String nazwa);
 
-    void modyfikujHotel(Hotel hotel);
+    Hotel znajdzHotel(int id);
 
-    void usunHotel(Hotel hotel);
+    Hotel znajdzHotel(Pokoj pokoj);
+
+    void dodajHotel(Hotel hotel, String nazwaKierownika);
+	
+	void zmienHotel(HotelForm hotelDane, String kierownik);
+	
+	void usunHotel(String nazwaKierownika);
 }

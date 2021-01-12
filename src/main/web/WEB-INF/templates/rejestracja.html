@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+    <title>Rejestracja</title>
+</head>
+<style>
+    span.error {
+        color: red;
+    }
+
+    div.errors {
+        background-color: #ffcccc;
+        border: 2px solid red;
+    }
+
+    label.error {
+        color: red;
+    }
+
+    input.error {
+        background-color: #ffcccc;
+    }
+</style>
+<body>
+<div id="header" th:include="page :: header"></div>
+<h1 class="text-center">Rejestracja</h1>
+<h4 class="text-center">Wypełnij poniższy formularz</h4>
+<form method="POST" th:object="${uzytkownikForm}" th:action="@{/register}">
+    <div class="container">
+        <div class="errors" th:if="${#fields.hasErrors('*')}">
+            <div class="list-group">
+                <div class="list-group-item active" aria-current="true">Wprowadzone dane zawierają błędy</div>
+                <div th:each="err : ${#fields.errors('*')}"
+                    th:text="${err}">Wprowadzone dane zawierają błędy</div>
+            </div>
+        </div>
+        <div class="row g-2">
+            <div class="col-md">
+                <div class="form-floating">
+                    <input type="text" th:field="*{imie}" th:classappend="${#fields.hasErrors('imie')}? 'error'"  th:class="form-control" id="floatingInputGrid1">
+                    <label th:class="${#fields.hasErrors('imie')}? 'error'" for="floatingInputGrid1">Imie</label>
+                </div>
+            </div>
+            <div class="col-md">
+                <div class="form-floating">
+                    <input type="text" th:field="*{nazwisko}" th:classappend="${#fields.hasErrors('nazwisko')}? 'error'" th:class="form-control" id="floatingInputGrid2">
+                    <label th:class="${#fields.hasErrors('nazwisko')}? 'error'" for="floatingInputGrid2">Nazwisko</label>
+                </div>
+            </div>
+        </div>
+        <div class="row g-2">
+            <div class="col-md">
+                <div class="form-floating">
+                    <input type="text" th:field="*{nazwa}" th:classappend="${#fields.hasErrors('nazwa')}? 'error'" th:class="form-control" id="floatingInputGrid3">
+                    <label th:class="${#fields.hasErrors('nazwa')}? 'error'" for="floatingInputGrid3">Nazwa użytkownika</label>
+                </div>
+            </div>
+            <div class="col-md">
+                <div class="form-floating">
+                    <select class="form-select" th:field="*{rola}" th:classappend="${#fields.hasErrors('rola')}? 'error'" id="floatingSelectGrid" aria-label="Floating label select example">
+                        <option value="" selected></option>
+                        <option value="ROLE_KLIENT">Klient</option>
+                        <option value="ROLE_KIEROWNIK">Kierownik</option>
+                    </select>
+                    <label for="floatingSelectGrid" th:class="${#fields.hasErrors('rola')}? 'error'">Typ konta</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-floating">
+            <input type="password" th:field="*{haslo}" th:classappend="${#fields.hasErrors('haslo')}? 'error'" th:class="form-control" id="floatingPassword1">
+            <label for="floatingPassword1" th:class="${#fields.hasErrors('haslo')}? 'error'">Hasło</label>
+        </div>
+        <input type="submit" class="btn btn-primary" value="Wyślij" />
+    </div>
+</form>
+</body>
+</html>
