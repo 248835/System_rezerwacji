@@ -30,16 +30,23 @@
         <div class="col-md">
             <div th:each="pokoj : ${pokoje}">
                 <a sec:authorize="hasRole('KIEROWNIK')" th:href="@{'/kierownik/pokoj/' + ${pokoj.id}}" class="list-group-item list-group-item-action">
-                <div sec:authorize="hasRole('PRACOWNIK')" class="list-group-item list-group-item-action disabled">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1"><span th:text="${pokoj.rozmiar}"></span>. osobowy pokój <span
+                    <div sec:authorize="hasRole('KIEROWNIK')" class="d-flex w-100 justify-content-between">
+                        <h5 sec:authorize="hasRole('KIEROWNIK')" class="mb-1"><span th:text="${pokoj.rozmiar}"></span>. osobowy pokój <span
                                 th:text="${pokoj.rodzaj}"></span></h5>
-                        <small class="text-muted">Cena: <span th:text="${pokoj.cena}"></span></small>
+                        <small sec:authorize="hasRole('KIEROWNIK')" class="text-muted">Cena: <span th:text="${pokoj.cena}"></span></small>
                     </div>
 <!--                    <p class="mb-1">Tu może być opis</p>-->
-                    <small>Numer Pokoju: <span th:text="${pokoj.numer}"></span></small>
-                </div>
+                    <small sec:authorize="hasRole('KIEROWNIK')">Numer Pokoju: <span th:text="${pokoj.numer}"></span></small>
                 </a>
+                <div sec:authorize="hasRole('PRACOWNIK')" class="list-group-item list-group-item-action disabled">
+                    <div sec:authorize="hasRole('PRACOWNIK')" class="d-flex w-100 justify-content-between">
+                        <h5 sec:authorize="hasRole('PRACOWNIK')" class="mb-1"><span th:text="${pokoj.rozmiar}"></span>. osobowy pokój <span
+                                th:text="${pokoj.rodzaj}"></span></h5>
+                        <small sec:authorize="hasRole('PRACOWNIK')" class="text-muted">Cena: <span th:text="${pokoj.cena}"></span></small>
+                    </div>
+                    <!--                    <p class="mb-1">Tu może być opis</p>-->
+                    <small sec:authorize="hasRole('PRACOWNIK')">Numer Pokoju: <span th:text="${pokoj.numer}"></span></small>
+                </div>
             </div>
             <a sec:authorize="hasRole('KIEROWNIK')" class="btn btn-primary" th:href="@{/kierownik/dodajPokoj}"
                role="button">Dodaj pokoj</a>
