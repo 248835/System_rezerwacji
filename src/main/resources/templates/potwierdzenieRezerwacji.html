@@ -12,14 +12,20 @@
     <title>Rezerwacja</title>
 </head>
 <body>
-<div id="header" th:include="page :: header"></div>
-<ul class="list-group">
-    <li class="list-group-item active" aria-current="true"><h2>Rezerwacja</h2></li>
-    <li class="list-group-item"><span th:text="${rezerwacja.pokoj.rozmiar}"></span>. osobowy pokój w hotelu <span
-            th:text="${rezerwacja.hotel.nazwa}"></span></li>
-    <li class="list-group-item">Termin rezerwacji: <span th:text="${rezerwacja.poczatekRezerwacji}"></span> do <span
-            th:text="${rezerwacja.koniecRezerwacji}"></span></li>
-    <li class="list-group-item">Cena za pobyt: <span th:text="${cena}"></span></li>
-</ul>
+<!--<div id="header" th:include="page :: header"></div>-->
+<div class="container">
+    <ul class="list-group">
+        <li class="list-group-item active" aria-current="true"><h2>Rezerwacja</h2></li>
+        <li class="list-group-item"><span th:text="${rezerwacja.pokoj.rozmiar}"></span>. osobowy pokój w hotelu <span
+                th:text="${rezerwacja.hotel.nazwa}"></span></li>
+        <li class="list-group-item">Termin rezerwacji: <span th:text="${rezerwacja.poczatekRezerwacji}"></span> do <span
+                th:text="${rezerwacja.koniecRezerwacji}"></span></li>
+        <li class="list-group-item">Cena za pobyt: <span th:text="${cena}"></span></li>
+    </ul>
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <a class="btn btn-danger" th:href="@{'/rezerwacje/anulujRezerwacje/' + ${rezerwacja.id}}" role="button">Anuluj</a>
+        <a class="btn btn-primary" th:href="@{/rezerwacje}" role="button">Potwierdź</a>
+    </div>
+</div>
 </body>
 </html>

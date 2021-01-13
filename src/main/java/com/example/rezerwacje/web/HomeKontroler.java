@@ -228,6 +228,13 @@ public class HomeKontroler {
         return "redirect:/rezerwacje";
     }
 
+    @RequestMapping(value = "/rezerwacje/anulujRezerwacje/{id}",method = GET)
+    public String anulujRezerwacje(@PathVariable int id){
+        rezerwacjaRepository.usunRezerwacje(id);
+
+        return "redirect:/";
+    }
+
     private Uzytkownik getUzytkownik(){
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username;
