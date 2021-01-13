@@ -24,7 +24,7 @@
         <li class="list-group-item">Cena za pobyt: <span th:text="${cena}"></span></li>
     </ul>
     <div class="btn-group" role="group" aria-label="Basic example">
-        <a class="btn btn-primary" th:href="@{/pracownik}" role="button">Anuluj</a>
+        <a class="btn btn-primary" th:href="@{/}" role="button">Anuluj</a>
         <form th:action="@{'/pracownik/' + ${rezerwacja.id}}" th:method="post">
             <input type="submit" class="btn btn-primary" value="Zapłać"/>
         </form>
