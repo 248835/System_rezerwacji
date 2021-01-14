@@ -68,10 +68,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/pracownik/{idRezerwacji}/**").hasAnyRole("PRACOWNIK","KIEROWNIK")
                 .antMatchers("/pracownik/**").hasRole("PRACOWNIK")
                 .antMatchers("/klient/**").authenticated()
-                .anyRequest().permitAll().and()
-                .requiresChannel()
+                .anyRequest().permitAll();
+//                .and()
+//                .requiresChannel()
                 //.antMatchers("/register").requiresSecure()    //fixme spring bully :'(
-                .antMatchers("/").requiresInsecure();
+//                .antMatchers("/").requiresInsecure();
     }
 }
 
