@@ -8,6 +8,12 @@ public class Uzytkownik {
     private String rola;
     private String nazwaKierownika;
 
+    public Uzytkownik(String nazwa, String imie, String nazwisko) {
+        this.nazwa = nazwa;
+        this.imie = imie;
+        this.nazwisko = nazwisko;
+    }
+
     public Uzytkownik(String nazwa, String haslo, String imie, String nazwisko, String rola) {
         this.nazwa = nazwa;
         this.haslo = haslo;

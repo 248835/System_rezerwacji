@@ -38,10 +38,10 @@ public class PracownikKontroler {
     public String rezerwacje(Model model){
         String kierownik = getPracownik().getNazwaKierownika();
         List<Rezerwacja> rezerwacje = rezerwacjaRepository.znajdzRezerwacjeHotelu(kierownik);
-        for (Rezerwacja rezerwacja : rezerwacje){
-            rezerwacja.setPokoj(pokojRepository.znajdzPokoj(rezerwacja.getPokoj().getId()));
-            rezerwacja.setUzytkownik(uzytkownikRepository.znajdzUzytkownika(rezerwacja.getUzytkownik().getNazwa()));
-        }
+//        for (Rezerwacja rezerwacja : rezerwacje){
+//            rezerwacja.setPokoj(pokojRepository.znajdzPokoj(rezerwacja.getPokoj().getId()));
+//            rezerwacja.setUzytkownik(uzytkownikRepository.znajdzUzytkownika(rezerwacja.getUzytkownik().getNazwa()));
+//        }
         model.addAttribute("rezerwacje",rezerwacje);
         model.addAttribute("hotel",hotelRepository.znajdzHotelKierownik(kierownik));
         model.addAttribute("pokoje",pokojRepository.znajdzPokojeNazwaKierownika(kierownik));

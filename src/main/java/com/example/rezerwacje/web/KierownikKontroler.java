@@ -45,10 +45,10 @@ public class KierownikKontroler {
             return "dodajHotel";
         }
         List<Rezerwacja> rezerwacje = rezerwacjaRepository.znajdzRezerwacjeHotelu(getKierownik().getNazwa());
-        for (Rezerwacja rezerwacja : rezerwacje) {
-            rezerwacja.setPokoj(pokojRepository.znajdzPokoj(rezerwacja.getPokoj().getId()));
-            rezerwacja.setUzytkownik(uzytkownikRepository.znajdzUzytkownika(rezerwacja.getUzytkownik().getNazwa()));
-        }
+//        for (Rezerwacja rezerwacja : rezerwacje) {
+//            rezerwacja.setPokoj(pokojRepository.znajdzPokoj(rezerwacja.getPokoj().getId()));
+//            rezerwacja.setUzytkownik(uzytkownikRepository.znajdzUzytkownika(rezerwacja.getUzytkownik().getNazwa()));
+//        }
         model.addAttribute("rezerwacje", rezerwacje);
         model.addAttribute("hotel", hotel);
         model.addAttribute("pokoje", pokojRepository.znajdzPokojeNazwaKierownika(getKierownik().getNazwa()));
@@ -187,7 +187,6 @@ public class KierownikKontroler {
     @RequestMapping(method = RequestMethod.GET, value = "/modyfikujHotel")
     public String modyfikujHotel(Model model) {
         model.addAttribute(new HotelForm(hotelRepository.znajdzHotelKierownik(getKierownik().getNazwa())));
-        System.out.println(hotelRepository.znajdzHotelKierownik(getKierownik().getNazwa()));
 
         return "modyfikujHotel";
     }
@@ -197,7 +196,6 @@ public class KierownikKontroler {
         if (errors.hasErrors()){
             return "modyfikujHotel";
         }
-        System.out.println(hotelForm);
         hotelRepository.zmienHotel(hotelForm,getKierownik().getNazwa());
 
         return "redirect:/kierownik";

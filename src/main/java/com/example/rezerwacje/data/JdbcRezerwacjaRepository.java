@@ -31,6 +31,7 @@ public class JdbcRezerwacjaRepository implements RezerwacjaRepository {
             "(select id from hotele where nazwa_kierownika=?))";
     private static final String DELETE_REZERWACJE = "delete from rezerwacje where id = ?";
     private static final String SELECT_FROM_REZERWACJE_WHERE_NAZWA_KLIENTA = "select * from rezerwacje where NAZWA_KLIENTA = ?";
+    private static final String SELECT_FROM_VIEW = "select * from widok_rezerwacji where ID_HOTELU = (select id from hotele where NAZWA_KIEROWNIKA = ?)";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -78,7 +79,8 @@ public class JdbcRezerwacjaRepository implements RezerwacjaRepository {
 
     @Override
     public List<Rezerwacja> znajdzRezerwacjeHotelu(String nazwaKierownika) {
-        return jdbcTemplate.query(SELECT_REZERWACJE_FROM_HOTELE, this::mapRow, nazwaKierownika);
+//        return jdbcTemplate.query(SELECT_REZERWACJE_FROM_HOTELE, this::mapRow, nazwaKierownika);
+        return jdbcTemplate.query(SELECT_FROM_VIEW,this::mapRowView,nazwaKierownika);
     }
 
     @Override
@@ -104,5 +106,22 @@ public class JdbcRezerwacjaRepository implements RezerwacjaRepository {
         Date poczatekRezerwacji = resultSet.getDate("DATA_ROZPOCZECIA");
         Date koniecRezerwacji = resultSet.getDate("DATA_ZAKONCZENIA");
         return new Rezerwacja(id, hotel, pokoj, uzytkownik, poczatekRezerwacji, koniecRezerwacji);
+    }
+
+    private Rezerwacja mapRowView(ResultSet resultSet, int i) throws SQLException {
+        String nazwa = resultSet.getString("nazwa");
+        String imie = resultSet.getString("imie");
+        String nazwisko = resultSet.getString("nazwisko");
+        int numer = resultSet.getInt("numer");
+        int rodzaj = resultSet.getInt("rodzaj");
+        int rozmiar = resultSet.getInt("rozmiar");
+        int cena = resultSet.getInt("cena");
+        Date poczatekRezerwacji = resultSet.getDate("DATA_ROZPOCZECIA");
+        Date koniecRezerwacji = resultSet.getDate("DATA_ZAKONCZENIA");
+
+        return new Rezerwacja(new Hotel(),
+                new Pokoj(numer,rodzaj,rozmiar,cena),
+                new Uzytkownik(nazwa,imie,nazwisko),
+                poczatekRezerwacji,koniecRezerwacji);
     }
 }
