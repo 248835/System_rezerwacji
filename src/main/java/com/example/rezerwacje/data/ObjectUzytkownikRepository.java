@@ -10,6 +10,10 @@ public class ObjectUzytkownikRepository implements UzytkownikRepository {
     private static ObjectUzytkownikRepository uzytkownik_instance;
     private final List<Uzytkownik> uzytkownicy = new ArrayList<>();
 
+    public int sizeUzytkownicy(){
+        return uzytkownicy.size();
+    }
+
     public void clearUzytkownicy(){
         uzytkownicy.clear();
     }
