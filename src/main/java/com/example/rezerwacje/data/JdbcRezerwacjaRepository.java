@@ -118,8 +118,9 @@ public class JdbcRezerwacjaRepository implements RezerwacjaRepository {
         int cena = resultSet.getInt("cena");
         Date poczatekRezerwacji = resultSet.getDate("DATA_ROZPOCZECIA");
         Date koniecRezerwacji = resultSet.getDate("DATA_ZAKONCZENIA");
+        int id = resultSet.getInt("id");
 
-        return new Rezerwacja(new Hotel(),
+        return new Rezerwacja(id,new Hotel(),
                 new Pokoj(numer,rodzaj,rozmiar,cena),
                 new Uzytkownik(nazwa,imie,nazwisko),
                 poczatekRezerwacji,koniecRezerwacji);
